@@ -75,11 +75,14 @@ WSGI_APPLICATION = 'sistema_denuncias.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'environmental_reports',
+        'USER': 'admin',
+        'PASSWORD': 'Admin_1234',
+        'HOST': 'localhost',  # O la dirección IP del servidor MySQL
+        'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
