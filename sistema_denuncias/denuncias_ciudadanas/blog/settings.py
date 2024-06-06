@@ -77,13 +77,9 @@ WSGI_APPLICATION = "blog.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'environmental_reports',
-        'USER': 'admin',
-        'PASSWORD': 'Admin_1234',
-        'HOST': 'localhost',  # O la dirección IP del servidor MySQL
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
 
