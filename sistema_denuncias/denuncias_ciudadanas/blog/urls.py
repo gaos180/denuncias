@@ -18,9 +18,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from website.views import publicaciones
-from website.views import create_report, success, mapa
-from website.views import registar
+from website.views import publicaciones, registro_denuncia, create_report, success, mapa, registar
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
@@ -31,5 +29,5 @@ urlpatterns = [
     path('mapa/', mapa, name="mapa"),
     path('register/', registar, name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
-
+    path('ingreso_denuncia/', registro_denuncia, name='registro_denuncia'),
 ]

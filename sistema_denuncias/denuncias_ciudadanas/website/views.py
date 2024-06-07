@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Post, PostForm
-from .forms import ReportForm
 from django.contrib.auth import login
 from .forms import UserRegisterForm
 from django.contrib.auth.models import Group
+from .forms import ReportForm, RegistroDenuncia
+from django.urls import reverse
 
 # Create your views here.
 def publicaciones(request):
@@ -81,3 +82,20 @@ def registar(request):
     else:
         form = UserRegisterForm()
     return render(request, 'website/register.html', {'form': form})
+
+
+
+def registro_denuncia(request):
+    registro_denuncia = RegistroDenuncia()
+
+    if request.method == 'POST':
+        registro_denuncia = RegistroDenuncia(data=request.POST)
+        if registro_denuncia.is_valid():
+            registro_denuncia.save()
+            #Se da aviso que todo esta bien
+            return redirect(reverse('registro_denuncia')+'?ok')
+        else:
+            #Se notifica error
+            return redirect(reverse('registro_denuncia')+'?error')
+        
+    return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})

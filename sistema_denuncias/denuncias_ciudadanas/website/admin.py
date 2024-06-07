@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, RegistroDenuncia
 
 # Register your models here.
 admin.site.register(Post)
+
+admin.site.register(RegistroDenuncia)
+
+class ConsultaAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'causa', 'asunto', 'fecha_evento', 'fecha_envio')
+    search_fields = ('titulo', 'causa', 'asunto', 'fecha_evento', 'fecha_envio')
+    list_filter = ('titulo', 'causa', 'asunto', 'fecha_evento', 'fecha_envio')

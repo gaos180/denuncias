@@ -30,7 +30,6 @@
 
 </head>
 <body>
-    {% block content %}
     <nav class="py-2 bg-dark border-bottom">
         <div class="container d-flex flex-wrap">
             <ul class="nav me-auto"></ul>
@@ -58,13 +57,18 @@
             </ul>
         </div>
     </nav>
-    {% endblock content %}
+    
+    {% block content %}
 
     <div class="container">
         <div id="map">
 
         </div>
     </div>
+
+    {% endblock content %}
+
+
 </body>
 {% bootstrap_javascript %}
 </html>

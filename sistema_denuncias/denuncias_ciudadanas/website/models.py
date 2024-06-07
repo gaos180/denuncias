@@ -37,21 +37,8 @@ class Report(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
 
-"""
-
-class Report(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    status = models.CharField(max_length=50)
-    location = models.CharField(max_length=255)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-"""
-
 class ReportImage(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.PROTECT)
     image_path = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -59,18 +46,31 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
 
 class ReportCategory(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
 class ReportComment(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
     comment_text = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 class Geolocation(models.Model):
-    report = models.ForeignKey(Report, on_delete=models.CASCADE)
+    report = models.ForeignKey(Report, on_delete=models.PROTECT)
     latitude = models.FloatField()
     longitude = models.FloatField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+categorias = [
+    [0, "Lugar de explotación"],
+    [1, "Uso y/o contaminación de recursos naturales"],
+    [2, "Residuos, emisiones e inmisiones"]
+]
+class RegistroDenuncia(models.Model):
+    titulo = models.CharField(max_length=20, verbose_name= 'Ingrese titulo de denuncia')
+    causa = models.IntegerField(choices=categorias, verbose_name='Causa de conflicto')
+    asunto = models.TextField(max_length=200, verbose_name='Ingrese asunto')
+    fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de ingreso')
+    consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
+    fecha_evento = models.DateField(verbose_name='Fecha del evento', null=True, blank=True)
