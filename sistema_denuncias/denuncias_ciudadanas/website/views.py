@@ -53,3 +53,6 @@ def create_report(request):
 
 def success(request):
     return render(request, 'website/success.html')
+
+def mapa(request):
+    return render(request, 'website/mapa.html')

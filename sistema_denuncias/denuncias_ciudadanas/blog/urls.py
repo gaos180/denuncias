@@ -19,12 +19,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from website.views import publicaciones
-from website.views import create_report, success
+from website.views import create_report, success, mapa
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("publicaciones/", publicaciones),
     path('create_report/', create_report),
-    path('success/', success),  # Vista para la página de éxito
+    path('success/', success),
+    path('mapa/', mapa)
 
 ]

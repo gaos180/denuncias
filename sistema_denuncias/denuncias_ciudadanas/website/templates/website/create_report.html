@@ -26,21 +26,32 @@
   {% bootstrap_css %}
 </head>
 <body>
-  <h1>Denuncia aquí</h1>
-  <form method="post">
-    <p>
-    <label for="{{ form.title.id }}">{{ form.title.label }}</label>
-    {{ form.title }}
-    <p>
 
-    <label for="{{ form.description.id }}">{{ form.description.label }}</label>
-    <p>
+  <div class="container">
+    <h1>Denuncia aquí</h1>
 
-    {{ form.description }}
-    <p>
-    <label for="{{ form.location.id }}">{{ form.location.label }}</label>
-    {{ form.location }}
-    <button type="submit">Enviar</button>
-  </form>
+      <div class="col-md-6 pt-4">
+        <form method="post">
+          {% csrf_token %}
+          <div class="card-body">
+            <p>
+              <label for="{{ form.title.id }}">{{ form.title.label }}</label>
+              {{ form.title }}
+              <p>
+      
+              <label for="{{ form.description.id }}">{{ form.description.label }}</label>
+              <p>
+      
+              {{ form.description }}
+              <p>
+              <label for="{{ form.location.id }}">{{ form.location.label }}</label>
+              {{ form.location }}
+              <button type="submit">Enviar</button>
+          </div>
+        </form>          
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
