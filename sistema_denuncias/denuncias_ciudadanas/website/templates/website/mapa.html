@@ -41,9 +41,11 @@
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" id="cerrar" style="background-color: transparent; border: none; color: #fff; padding: 10px 20px; cursor: pointer" >Cerrar sesion</button>
-                            
+                            <button type="submit" id="cerrar" style="background-color: transparent; border: none; color: #fff; padding: 10px 20px; cursor: pointer" >Cerrar sesion</button>                            
                         </form>
+                    </li>
+                    <li>
+                        <a class="nav-link text-white" href="{% url 'registro_denuncia' %}" style="background-color: transparent; border: none; color: #fff; padding: 10px 20px; text-decoration: none">Denunciar ahora</a>
                     </li>
                 {% else %}
                 <ul class="nav">
