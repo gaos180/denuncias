@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from .models import Post, PostForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
 from django.contrib.auth.models import Group
 from .forms import ReportForm, RegistroDenuncia
 from django.urls import reverse
+from django.contrib.auth.forms import AuthenticationForm
 
 # Create your views here.
 def publicaciones(request):
@@ -78,7 +79,7 @@ def registar(request):
             user.groups.add(group)
             
             login(request, user)
-            return redirect('mapa')
+            return render(request, "website/mapa.html")
     else:
         form = UserRegisterForm()
     return render(request, 'website/register.html', {'form': form})
@@ -99,3 +100,19 @@ def registro_denuncia(request):
             return redirect(reverse('registro_denuncia')+'?error')
         
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
+
+
+def login_web(request):
+    if request.method == "POST":
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            user = authenticate(
+                username=form.cleaned_data["username"],
+                password=form.cleaned_data["password"]
+            )
+            if user is not None:
+                login(request, user)
+                return render(request, "website/mapa.html")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'website/login_1.html', {"form": form})

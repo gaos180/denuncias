@@ -18,10 +18,11 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from website.views import publicaciones, registro_denuncia, create_report, success, mapa, registar
+from website.views import publicaciones, registro_denuncia, create_report, success, mapa, registar, login_web
 from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
+    path("login/", login_web, name="login"),
     path("admin/", admin.site.urls),
     path("publicaciones/", publicaciones),
     path('create_report/', create_report),
