@@ -37,12 +37,22 @@
                 {% if request.user.is_authenticated %}
                 <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link text-white">Hola, {{request.user.get_full_name}} - Cerrar sesión</a>
+                        <a class="nav-link text-white">Hola, {{ user.first_name }} {{ user.last_name }}</a>
+                    </li>
+                    <li>
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" id="cerrar" style="background-color: transparent; border: none; color: #fff; padding: 10px 20px; cursor: pointer" >Cerrar sesion</button>
+                            
+                        </form>
                     </li>
                 {% else %}
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link text-white">Iniciar sesión</a>
+                    </li>
+                    <li>
+                        <a class="nav-link text-white" href="{% url "register" %}">Crear usuario</a>
                     </li>
                 {% endif %}
             </ul>
@@ -56,4 +66,5 @@
         </div>
     </div>
 </body>
+{% bootstrap_javascript %}
 </html>

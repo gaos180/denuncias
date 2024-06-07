@@ -20,12 +20,16 @@ from django.contrib import admin
 from django.urls import path
 from website.views import publicaciones
 from website.views import create_report, success, mapa
+from website.views import registar
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("publicaciones/", publicaciones),
     path('create_report/', create_report),
     path('success/', success),
-    path('mapa/', mapa)
+    path('mapa/', mapa, name="mapa"),
+    path('register/', registar, name='register'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
 ]

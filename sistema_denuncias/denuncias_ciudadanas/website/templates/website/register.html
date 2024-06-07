@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    {% load bootstrap5 %}
+    {% bootstrap_css %}
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Registrar</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Nombre de usuario</label>
+                {{ form.username }}
+            </div>
+            <div class="mb-3">
+                <label for="id_first_name" class="form-label">Nombre</label>
+                {{ form.first_name }}
+            </div>
+            <div class="mb-3">
+                <label for="id_last_name" class="form-label">Apellido</label>
+                {{ form.last_name }}
+            </div>
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                {{ form.email }}
+            </div>
+            <div class="mb-3">
+                <label for="id_password1" class="form-label">Contraseña</label>
+                {{ form.password1 }}
+            </div>
+            <div class="mb-3">
+                <label for="id_password2" class="form-label">Confirme la contraseña</label>
+                {{ form.password2 }}
+            </div>
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+    </div>
+    {% bootstrap_javascript %}
+</body>
+</html>

@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from .models import Post, PostForm
 from .forms import ReportForm
+from django.contrib.auth import login
+from .forms import UserRegisterForm
+from django.contrib.auth.models import Group
 
 # Create your views here.
 def publicaciones(request):
@@ -56,3 +59,25 @@ def success(request):
 
 def mapa(request):
     return render(request, 'website/mapa.html')
+
+
+def registar(request):
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.first_name = form.cleaned_data.get('first_name')
+            user.last_name = form.cleaned_data.get('last_name')
+            user.email = form.cleaned_data.get('email')
+            user.set_password(form.cleaned_data['password1'])
+            user.is_staff = True  # Hacer al usuario personal (opcional)
+            user.save()
+
+            group = Group.objects.get(name='denunciantes')
+            user.groups.add(group)
+            
+            login(request, user)
+            return redirect('mapa')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'website/register.html', {'form': form})
