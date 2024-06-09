@@ -74,3 +74,9 @@ class RegistroDenuncia(models.Model):
     fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de ingreso')
     consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
     fecha_evento = models.DateField(verbose_name='Fecha del evento', null=True, blank=True)
+    # localizacion_geo = [variable del post]
+    # usuario denunciante = [variable del post]
+
+    
+    def __str__(self) -> str:
+        return self.titulo

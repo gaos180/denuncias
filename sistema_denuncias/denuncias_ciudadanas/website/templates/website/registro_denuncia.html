@@ -2,30 +2,92 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <h3 class="text">Formulario de Denuncia</h3>
-    <div class="row">
-        <div class="col-md-6 card center">
-            <form action="" method="POST">
-                {% csrf_token %}
+    <style>
+        .asteriskField{
+            display: none;
+        }
+        h3{
+            margin-top: 4px;
+        }
+        .card-left{
+            border-top: 6px solid #40A4F4;
+        }
+        .card-right{
+            border-top: 6px solid #5ab228;
+        }
+    </style>
+    {% if request.user.is_authenticated %}
+        <div class="container">
+            <h3 class="text">Formulario de Denuncia</h3>
+            <div class="row">
+                <div class="col-md-4 card center card-left">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ registro_denuncia | crispy}}
+                        <input class="btn btn-primary" type="submit" value="Enviar Mensaje" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
+                    </form>
 
-                {{ registro_denuncia | crispy}}
+                    {% if 'ok' in request.GET %}
+                        <div class="alert alert-success mt-5" role="alert">
+                            <strong>El mensaje se ha enviado correctamente</strong>
+                        </div>
+                    {% endif %}
 
-                <input class="btn btn-primary" type="submit" value="Enviar Mensaje" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
-            </form>
-
-            {% if 'ok' in request.GET %}
-                <div class="alert alert-success mt-5" role="alert">
-                    <strong>El mensaje se ha enviado correctamente</strong>
+                    {% if 'error' in request.GET %}
+                        <div class="alert alert-danger mt-5" role="alert">
+                            <strong>El mensaje no ha podido ser enviado. Por favor, intente más tarde</strong>
+                        </div>
+                    {% endif %}
                 </div>
-            {% endif %}
+                    <div class="col-md-7 card card-right ">
+                        <style>
+                            #map {
+                                margin-top:10px;
+                                height: 500px;
+                                width: 100%;
+                            }
+                        </style>
+                        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
+                        <script>
+                            function initMap() {
+                                var mapOptions = {
+                                    center: { lat: -35.405338287353516, lng: -71.6393814086914 },
+                                    zoom: 14
+                                };
+                                var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+                                 // Variable to hold the marker
+                            let marker;
 
-            {% if 'error' in request.GET %}
-                <div class="alert alert-danger mt-5" role="alert">
-                    <strong>El mensaje no ha podido ser enviado. Por favor, intente más tarde</strong>
-                </div>
-            {% endif %}
+                            // Add click event listener to the map
+                            google.maps.event.addListener(map, "click", function(event) {
+                                // If marker exists, remove it first
+                                if (marker) {
+                                marker.setMap(null);
+                                }
+
+                                // Create a new marker at the clicked location
+                                marker = new google.maps.Marker({
+                                position: event.latLng,
+                                map: map,
+                                });
+                            });
+                            }
+                        </script>
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <div id="map" class="border rounded">
+
+                        </div>
+                    </div>
+            
+            </div>
+        </div>
+    {% else %}
+    <div>
+        <div class="alert alert-primary" role="alert">
+            Ingrese sesión para realizar la denuncia
         </div>
     </div>
+    {% endif %}   
 
     <hr>
  

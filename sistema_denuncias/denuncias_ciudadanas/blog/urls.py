@@ -28,6 +28,7 @@ urlpatterns = [
     path('create_report/', create_report),
     path('success/', success),
     path('mapa/', mapa, name="mapa"),
+    path('', mapa),
     path('register/', registar, name='register'),
     path('logout/', LogoutView.as_view(), name='logout'),
     path('ingreso_denuncia/', registro_denuncia, name='registro_denuncia'),

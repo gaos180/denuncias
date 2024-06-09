@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from .forms import ReportForm, RegistroDenuncia
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
+from django.core.mail import send_mail
 
 # Create your views here.
 def publicaciones(request):
@@ -79,7 +80,22 @@ def registar(request):
             user.groups.add(group)
             
             login(request, user)
+            subject = "Creación de cuenta"
+            message = "Se ha creado una cuenta asociada a tu email"
+            from_email = "denuncias_medioambientales@outlook.com"
+            email_password = "denuncia123"
+
+            recipient_list = [user.email]
+
+            # Send the email
+            send_mail(subject, message, from_email, recipient_list, html_message=message, fail_silently=False, authentication=(from_email, email_password))
+            # Optional: Handle success/error scenarios
+            if send_mail(subject, message, from_email, recipient_list, html_message=message, fail_silently=False, authentication=(from_email, email_password)):
+                print("Email sent successfully!")
+            else:
+                print("Error sending email.")
             return render(request, "website/mapa.html")
+
     else:
         form = UserRegisterForm()
     return render(request, 'website/register.html', {'form': form})
