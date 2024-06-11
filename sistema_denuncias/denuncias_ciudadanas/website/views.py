@@ -108,7 +108,12 @@ def registro_denuncia(request):
     if request.method == 'POST':
         registro_denuncia = RegistroDenuncia(request.POST, request.FILES)
         if registro_denuncia.is_valid():
-            registro_denuncia.save()
+            denuncia = registro_denuncia.save(commit=False)
+            latitude = request.POST.get('latitude')
+            longitude = request.POST.get('longitude')
+            denuncia.latitude = float(latitude)
+            denuncia.longitude = float(longitude)
+            denuncia.save()
             #Se da aviso que todo esta bien
             return redirect(reverse('registro_denuncia')+'?ok')
         else:

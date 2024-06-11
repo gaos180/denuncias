@@ -24,7 +24,8 @@
                     <form action="" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ registro_denuncia | crispy}}
-
+                        <input type="hidden" id="id_latitude" name="latitude">
+                        <input type="hidden" id="id_longitude" name="longitude">
                 </div>
                     <div class="col-md-7 card card-right ">
                         <style>
@@ -57,6 +58,9 @@
                                 position: event.latLng,
                                 map: map,
                                 });
+                                // Update hidden fields with the selected location
+                                document.getElementById('id_latitude').value = event.latLng.lat();
+                                document.getElementById('id_longitude').value = event.latLng.lng();
                             });
                             }
                         </script>

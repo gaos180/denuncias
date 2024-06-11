@@ -5,7 +5,7 @@ from .models import Post, RegistroDenuncia
 admin.site.register(Post)
 
 class ConsultaAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'causa', 'asunto', 'imagen', 'fecha_envio')
+    list_display = ('titulo', 'causa', 'asunto', 'imagen', 'latitude','longitude','fecha_envio')
     search_fields = ('titulo', 'causa', 'asunto', 'fecha_envio')
     list_filter = ('titulo', 'causa', 'asunto', 'fecha_envio')
 

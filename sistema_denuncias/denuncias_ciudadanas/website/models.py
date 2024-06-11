@@ -74,6 +74,8 @@ class RegistroDenuncia(models.Model):
     imagen = models.ImageField(upload_to='imagenes/', default='default.jpg')
     fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de ingreso')
     consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     # localizacion_geo = [variable del post]
     # usuario denunciante = [variable del post]
 
