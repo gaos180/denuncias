@@ -106,7 +106,7 @@ def registro_denuncia(request):
     registro_denuncia = RegistroDenuncia()
 
     if request.method == 'POST':
-        registro_denuncia = RegistroDenuncia(data=request.POST)
+        registro_denuncia = RegistroDenuncia(request.POST, request.FILES)
         if registro_denuncia.is_valid():
             registro_denuncia.save()
             #Se da aviso que todo esta bien

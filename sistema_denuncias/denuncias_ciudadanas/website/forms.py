@@ -28,4 +28,4 @@ class UserRegisterForm(UserCreationForm):
 class RegistroDenuncia(forms.ModelForm):
     class Meta:
         model = RegistroDenuncia
-        fields = ['titulo', 'causa', 'fecha_evento', 'asunto', 'consentimiento']
+        fields = ['titulo', 'causa', 'asunto', 'imagen', 'consentimiento']

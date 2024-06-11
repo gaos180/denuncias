@@ -1,7 +1,11 @@
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Define BASE_DIR como un objeto Path
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Configuración de MEDIA_URL y MEDIA_ROOT usando Path
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Quick-start development settings - unsuitable for production
