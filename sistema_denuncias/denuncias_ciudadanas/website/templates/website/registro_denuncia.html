@@ -69,7 +69,7 @@
 
                         </div>
                     </div>
-                    <input class="btn btn-primary" type="submit" value="Enviar Mensaje" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
+                    <input class="btn btn-primary col-md-11" type="submit" value="Enviar Mensaje" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
                 </form>
 
                 {% if 'ok' in request.GET %}
