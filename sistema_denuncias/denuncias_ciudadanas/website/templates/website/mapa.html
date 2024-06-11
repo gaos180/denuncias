@@ -9,21 +9,40 @@
             width: 100%;
         }
     </style>
+
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
+
     <script>
-        function initMap() {
-            var mapOptions = {
-                center: { lat: -35.405338287353516, lng: -71.6393814086914 },
-                zoom: 14
-            };
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-            var marker = new google.maps.Marker({
-                position: { lat: -35.405338287353516, lng: -71.6393814086914 },
-                map: map,
-                title: 'denuncia'
-            });
+      function initMap(data) {
+        var mapOptions = {
+          center: { lat: -35.405338287353516, lng: -71.6393814086914 },
+          zoom: 14
+        };
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+        // Access 'data' from the enclosing scope (assuming it's defined outside)
+        for (const denuncia of data) {
+          console.log(denuncia.asunto)
+          const marker = new google.maps.Marker({
+            position: { lat: denuncia.latitude, lng: denuncia.longitude },
+            map: map,
+            content: denuncia.asunto,
+            // You can add more properties to the marker as needed
+          });
         }
+      }
+
+      document.addEventListener('DOMContentLoaded', function() {
+        fetch('/api/denuncias/')
+          .then(response => response.json())
+          .then(data => {
+            initMap(data);
+          })
+          .catch(error => console.error('Error:', error));
+      });
     </script>
+
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load bootstrap5 %}
     {% bootstrap_css %}
@@ -39,7 +58,7 @@
             margin-left: 5px;
             margin-right: 5px;
         }
-        
+
     </style>
     <nav class="py-2 bg-dark border-bottom">
         <div class="container d-flex flex-wrap">
@@ -48,7 +67,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
                         <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
                     </svg>
-    
+
                 </a>
             </ul>
                 {% if request.user.is_authenticated %}
@@ -62,10 +81,10 @@
                     <li>
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" id="cerrar" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; " >Cerrar sesión</button>                            
+                            <button type="submit" id="cerrar" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; " >Cerrar sesión</button>
                         </form>
                     </li>
-                    
+
                 {% else %}
                 <ul class="nav">
                     <li class="nav-item">

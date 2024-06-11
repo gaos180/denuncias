@@ -1,12 +1,31 @@
 from django.shortcuts import render, redirect
-from .models import Post, PostForm
+from .models import Post, PostForm, RegistroDenuncia
 from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
 from django.contrib.auth.models import Group
-from .forms import ReportForm, RegistroDenuncia
+from .forms import ReportForm, RegistroDeDenuncia
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
+from django.http import JsonResponse
+
+
+def obteniendo(request):
+    denuncias = RegistroDenuncia.objects.all()
+    denuncias_json = []
+    for denuncia in denuncias:
+        denuncia_data = {
+            "titulo": denuncia.titulo,
+            "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
+            "asunto": denuncia.asunto,
+            "fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            "latitude": denuncia.latitude,
+            "longitude": denuncia.longitude
+        }
+        denuncias_json.append(denuncia_data)
+
+    return JsonResponse(denuncias_json, safe=False)
+
 
 # Create your views here.
 def publicaciones(request):
@@ -78,7 +97,7 @@ def registar(request):
 
             group = Group.objects.get(name='denunciantes')
             user.groups.add(group)
-            
+
             login(request, user)
             subject = "Creación de cuenta"
             message = "Se ha creado una cuenta asociada a tu email"
@@ -103,10 +122,10 @@ def registar(request):
 
 
 def registro_denuncia(request):
-    registro_denuncia = RegistroDenuncia()
+    registro_denuncia = RegistroDeDenuncia()
 
     if request.method == 'POST':
-        registro_denuncia = RegistroDenuncia(request.POST, request.FILES)
+        registro_denuncia = RegistroDeDenuncia(request.POST, request.FILES)
         if registro_denuncia.is_valid():
             denuncia = registro_denuncia.save(commit=False)
             latitude = request.POST.get('latitude')
@@ -119,7 +138,7 @@ def registro_denuncia(request):
         else:
             #Se notifica error
             return redirect(reverse('registro_denuncia')+'?error')
-        
+
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
 
