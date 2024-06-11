@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm, TextInput, Textarea
+import datetime
 
 
 # Create your models here.
@@ -71,13 +72,13 @@ class RegistroDenuncia(models.Model):
     titulo = models.CharField(max_length=20, verbose_name= 'Ingrese titulo de denuncia')
     causa = models.IntegerField(choices=categorias, verbose_name='Causa de conflicto')
     asunto = models.TextField(max_length=200, verbose_name='Ingrese asunto')
+    fecha_suceso = models.DateField(null=True, blank=True)
+    hora_suceso = models.TimeField(null=True, blank=True)
     imagen = models.ImageField(upload_to='imagenes/', default='default.jpg')
     fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de ingreso')
     consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
-    # localizacion_geo = [variable del post]
-    # usuario denunciante = [variable del post]
+    latitude = models.FloatField(default=0)
+    longitude = models.FloatField(default=0)
 
     
     def __str__(self) -> str:

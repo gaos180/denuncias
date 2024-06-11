@@ -28,4 +28,8 @@ class UserRegisterForm(UserCreationForm):
 class RegistroDenuncia(forms.ModelForm):
     class Meta:
         model = RegistroDenuncia
-        fields = ['titulo', 'causa', 'asunto', 'imagen', 'consentimiento']
+        fields = ['titulo', 'causa', 'asunto', 'fecha_suceso', 'hora_suceso', 'imagen', 'consentimiento']
+        widgets = {
+            'fecha_suceso': forms.DateInput(attrs={'type': 'date'}),
+            'hora_suceso': forms.TimeInput(attrs={'type': 'time'}),
+        }
