@@ -83,6 +83,7 @@ def mapa(request):
     return render(request, 'website/mapa.html')
 
 
+
 def registar(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
@@ -97,28 +98,17 @@ def registar(request):
 
             group = Group.objects.get(name='denunciantes')
             user.groups.add(group)
-
-            login(request, user)
-            subject = "Creación de cuenta"
-            message = "Se ha creado una cuenta asociada a tu email"
-            from_email = "denuncias_medioambientales@outlook.com"
-            email_password = "denuncia123"
-
-            recipient_list = [user.email]
-
-            # Send the email
-            send_mail(subject, message, from_email, recipient_list, html_message=message, fail_silently=False, authentication=(from_email, email_password))
-            # Optional: Handle success/error scenarios
-            if send_mail(subject, message, from_email, recipient_list, html_message=message, fail_silently=False, authentication=(from_email, email_password)):
-                print("Email sent successfully!")
-            else:
-                print("Error sending email.")
+            print("debería ingresar a este")
             return render(request, "website/mapa.html")
-
+        else:
+            print("ingreso en el primer else")
+            # Handle invalid form data (e.g., display form errors in the template)
+            return render(request, 'website/register.html', {'form': form})  # Include error messages in context
     else:
-        form = UserRegisterForm()
-    return render(request, 'website/register.html', {'form': form})
+        print("ingreso en el segundo else")
 
+        form = UserRegisterForm()
+        return render(request, 'website/register.html', {'form': form})
 
 
 def registro_denuncia(request):
