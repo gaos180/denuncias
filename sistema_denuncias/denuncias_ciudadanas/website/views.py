@@ -93,20 +93,15 @@ def registar(request):
             user.last_name = form.cleaned_data.get('last_name')
             user.email = form.cleaned_data.get('email')
             user.set_password(form.cleaned_data['password1'])
-            user.is_staff = True  # Hacer al usuario personal (opcional)
+            user.is_staff = True 
             user.save()
 
             group = Group.objects.get(name='denunciantes')
             user.groups.add(group)
-            print("debería ingresar a este")
             return render(request, "website/mapa.html")
         else:
-            print("ingreso en el primer else")
-            # Handle invalid form data (e.g., display form errors in the template)
             return render(request, 'website/register.html', {'form': form})  # Include error messages in context
     else:
-        print("ingreso en el segundo else")
-
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
 

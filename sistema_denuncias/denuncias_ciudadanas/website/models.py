@@ -2,6 +2,7 @@ from django.db import models
 from django.forms import ModelForm, TextInput, Textarea
 import datetime
 
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Post(models.Model):
@@ -23,7 +24,7 @@ class PostForm(ModelForm):
         }
 
 
-class User(models.Model):
+class Usuario(models.Model):
     email = models.EmailField(unique=True)
     password = models.CharField(max_length=255)
     name = models.CharField(max_length=255)
@@ -79,7 +80,7 @@ class RegistroDenuncia(models.Model):
     consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
-
+    username = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
     
     def __str__(self) -> str:
         return self.titulo
