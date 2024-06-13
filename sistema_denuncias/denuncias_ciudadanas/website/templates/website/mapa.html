@@ -19,15 +19,50 @@
               zoom: 14
             };
             var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-          
-            for (const denuncia of data) {
-              console.log(denuncia.asunto)
-              const marker = new google.maps.Marker({
-                position: { lat: denuncia.latitude, lng: denuncia.longitude },
-                map: map,
-                title: denuncia.asunto,
-              });
-          
+            let markerColor;
+            switch (denuncia.causa) {
+              case 'Lugar de explotación':
+                markerColor = 'red';
+                break;
+              case 'Uso y/o contaminación de recursos naturales':
+                markerColor = 'green';
+                break;
+            
+            case 'Residuos, emisiones e inmisiones':
+                markerColor = 'blue';
+                break;
+              default:
+                markerColor = 'blue';
+            }
+            let markerPath;
+            switch (denuncia.causa) {
+              case 'Lugar de explotación':
+                markerPath = google.maps.SymbolPath.CIRCLE;
+                break;
+              case 'Uso y/o contaminación de recursos naturales':
+                markerPath = google.maps.SymbolPath.FORWARD_OPEN_ARROW;
+                break;
+            
+            case 'Residuos, emisiones e inmisiones':
+                markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+                break;
+              default:
+                markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+            }
+            const marker = new google.maps.Marker({
+              position: { lat: denuncia.latitude, lng: denuncia.longitude },
+              map: map,
+              title: denuncia.asunto,
+              icon: {
+                path: markerPath,
+                fillColor: markerColor,
+                fillOpacity: 0.8,
+                strokeColor: 'black',
+                strokeWeight: 2,
+                scale: 5
+              }
+            });
+      
               // aqui click en el marcador
               marker.addListener('click', function() {
                 // Show the modal with the denuncia information
@@ -141,27 +176,28 @@
     </nav>
 
     {% block content %}
-    <!-- Modal -->
+
+    </div>
+    <div class="container">
+        <div id="map">
+
+        </div>
+    </div>
+
+        <!-- Modal -->
     <div id="denunciaModal" class="modal-dialog-centered" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                 <h2 id="denunciaTitle"></h2>
                 <span class="close btn-close"></span>
-            </div>
+                </div>
             <div class="modal-body">
                 <p id="denunciaDescription"></p>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-primary" id="botonCerrar"> Close </button>
             </div>
-        </div>
-    </div>
-
-    </div>
-    <div class="container">
-        <div id="map">
-
         </div>
     </div>
 
