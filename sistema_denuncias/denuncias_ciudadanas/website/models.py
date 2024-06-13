@@ -69,6 +69,12 @@ categorias = [
     [1, "Uso y/o contaminación de recursos naturales"],
     [2, "Residuos, emisiones e inmisiones"]
 ]
+
+estados = [
+    [0, "En revisión"],
+    [1, "En procedimiento"],
+    [2, "Finalizada"],
+]
 class RegistroDenuncia(models.Model):
     titulo = models.CharField(max_length=20, verbose_name= 'Ingrese titulo de denuncia')
     causa = models.IntegerField(choices=categorias, verbose_name='Causa de conflicto')
@@ -81,6 +87,8 @@ class RegistroDenuncia(models.Model):
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
     username = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
-    
+    estado = models.IntegerField(choices=estados, verbose_name='Estado de la denuncia', default=0)
+
+
     def __str__(self) -> str:
         return self.titulo
