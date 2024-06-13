@@ -4,9 +4,7 @@
     <title>Mapa</title>
     <style>
         #map {
-            margin-top:10px;
             height: 500px;
-            width: 100%;
         }
     </style>
 
@@ -21,7 +19,10 @@
             var map = new google.maps.Map(document.getElementById('map'), mapOptions);
           
             for (const denuncia of data) {
-              console.log(denuncia.asunto)
+
+              console.log("El estado de la denuncia es:"+denuncia.estado)
+              console.log("La causa de la denuncia es:"+denuncia.causa)
+
               let markerColor;
                 switch (denuncia.causa) {
                   case 'Lugar de explotación':
@@ -38,15 +39,15 @@
                     markerColor = 'blue';
                 }
                 let markerPath;
-                switch (denuncia.causa) {
-                  case 'Lugar de explotación':
+                switch (denuncia.estado) {
+                  case 0:
                     markerPath = google.maps.SymbolPath.CIRCLE;
                     break;
-                  case 'Uso y/o contaminación de recursos naturales':
+                  case 1:
                     markerPath = google.maps.SymbolPath.FORWARD_OPEN_ARROW;
                     break;
                 
-                case 'Residuos, emisiones e inmisiones':
+                case 2:
                     markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
                     break;
                   default:
@@ -182,28 +183,68 @@
     {% block content %}
 
     </div>
-    <div class="container">
-        <div id="map">
-
+    
+    <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="card">
+              <div class="card-header">
+                <h2>Leyenda</h2>
+              </div>
+              <div class="card-body">
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">
+                    <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_circle.png"> Estado: En revisión
+                  </li>
+                  <li class="list-group-item">
+                    <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_fore_open.png"> Estado: En procedimiento
+                  </li>
+      
+                  <li class="list-group-item">
+                    <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_back_close.png"> Estado: Resuelto
+                  </li>
+                  <li class="list-group-item">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAADICAMAAAA9W+hXAAAAA1BMVEX6Ly+m5M7oAAAANElEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAN1+AABVhDU2QAAAABJRU5ErkJggg==" style="width: 24px;height: 24px ; border-radius:9999px;">
+                    Categoria: Lugar de explotación
+                  </li>
+                  <li class="list-group-item">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPKZ1yt_IyVF1G4sFaUN1qf2Mp_tR-TUpBaw&s" style="width: 24px;height: 24px ; border-radius:9999px;">
+                    Categoria: Uso y/o contaminación de recursos naturales
+                  </li>
+                  <li class="list-group-item">
+                    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAGFBMVEUpYv/a18308u3q7v8AVP/p5+H+//8ARP8TtSxnAAABH0lEQVR4nO3PCQ2EABAAMX78Oz4IORGzaR10Wadb1nOb7HyG27XPdW3vcL+Pqe79Gx7LVIdhnmGfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYd9/eB9T3d/w2ue63uG5TXY+w+l+h1EihcbqknUAAAAASUVORK5CYII=" style="width: 24px;height: 24px ; border-radius:9999px;">
+                    Categoria: Residuos, emisiones e inmisiones
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+      
+          <div class="col-md-7">
+            <div id="map" class="card">
+              </div>
+          </div>
+            <div id="denunciaModal" class="card col-md-3" style="display: none;">
+                <div class="modal-dialog">
+                    <div class="card-content">
+                        <div class="card-header">
+                        <h2 id="denunciaTitle"></h2>
+                        <span class="close btn-close"></span>
+                        </div>
+                    <div class="card-body">
+                        <p id="denunciaDescription"></p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" id="botonCerrar"> Close </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+      </div>
+      
 
         <!-- Modal -->
-    <div id="denunciaModal" class="modal-dialog-centered" style="display: none;">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h2 id="denunciaTitle"></h2>
-                <span class="close btn-close"></span>
-                </div>
-            <div class="modal-body">
-                <p id="denunciaDescription"></p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-primary" id="botonCerrar"> Close </button>
-            </div>
-        </div>
-    </div>
+ 
 
     {% endblock content %}
 

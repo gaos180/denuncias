@@ -20,7 +20,8 @@ def obteniendo(request):
             "asunto": denuncia.asunto,
             "fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
             "latitude": denuncia.latitude,
-            "longitude": denuncia.longitude
+            "longitude": denuncia.longitude,
+            "estado": denuncia.estado,
         }
         denuncias_json.append(denuncia_data)
 
