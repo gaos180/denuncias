@@ -13,33 +13,74 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
 
     <script>
-      function initMap(data) {
-        var mapOptions = {
-          center: { lat: -35.405338287353516, lng: -71.6393814086914 },
-          zoom: 14
-        };
-        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        function initMap(data) {
+            var mapOptions = {
+              center: { lat: -35.405338287353516, lng: -71.6393814086914 },
+              zoom: 14
+            };
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+          
+            for (const denuncia of data) {
+              console.log(denuncia.asunto)
+              const marker = new google.maps.Marker({
+                position: { lat: denuncia.latitude, lng: denuncia.longitude },
+                map: map,
+                title: denuncia.asunto,
+              });
+          
+              // aqui click en el marcador
+              marker.addListener('click', function() {
+                // Show the modal with the denuncia information
+                showMoreInfo(denuncia);
+              });
+            }
+          }
+          
+          function showMoreInfo(denuncia) {
+            // Get the modal element
+            var modal = document.getElementById("denunciaModal");
+          
+            // Get the modal content elements and populate them with the denuncia data
+            var titleElement = document.getElementById("denunciaTitle");
+            titleElement.textContent = denuncia.titulo;
 
-        // Access 'data' from the enclosing scope (assuming it's defined outside)
-        for (const denuncia of data) {
-          console.log(denuncia.asunto)
-          const marker = new google.maps.Marker({
-            position: { lat: denuncia.latitude, lng: denuncia.longitude },
-            map: map,
-            content: denuncia.asunto,
-            // You can add more properties to the marker as needed
+          
+            var descriptionElement = document.getElementById("denunciaDescription");
+            descriptionElement.textContent = "Causa: "+denuncia.causa + " | Asunto: "+ denuncia.asunto;
+          
+            // Show the modal
+            modal.style.display = "block";
+          }
+          
+          document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/denuncias/')
+              .then(response => response.json())
+              .then(data => {
+                initMap(data);
+              })
+              .catch(error => console.error('Error:', error));
+          
+            // Add a click event listener to the close button
+            var closeButton = document.getElementsByClassName("close")[0];
+            closeButton.addEventListener("click", function() {
+              var modal = document.getElementById("denunciaModal");
+              modal.style.display = "none";
+            });
+          
+            // Add a click event listener to the background to close the modal
+            window.addEventListener("click", function(event) {
+              var modal = document.getElementById("denunciaModal");
+              if (event.target == modal) {
+                modal.style.display = "none";
+              }
+              var closeBtn = document.querySelector("#botonCerrar");
+
+            // Cuando el usuario haga clic en el botón de cerrar, ocultar el modal
+            closeBtn.onclick = function() {
+                modal.style.display = "none";
+            }
+            });
           });
-        }
-      }
-
-      document.addEventListener('DOMContentLoaded', function() {
-        fetch('/api/denuncias/')
-          .then(response => response.json())
-          .then(data => {
-            initMap(data);
-          })
-          .catch(error => console.error('Error:', error));
-      });
     </script>
 
 
@@ -100,7 +141,24 @@
     </nav>
 
     {% block content %}
+    <!-- Modal -->
+    <div id="denunciaModal" class="modal-dialog-centered" style="display: none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h2 id="denunciaTitle"></h2>
+                <span class="close btn-close"></span>
+            </div>
+            <div class="modal-body">
+                <p id="denunciaDescription"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="botonCerrar"> Close </button>
+            </div>
+        </div>
+    </div>
 
+    </div>
     <div class="container">
         <div id="map">
 
