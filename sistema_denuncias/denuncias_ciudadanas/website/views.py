@@ -18,7 +18,7 @@ def obteniendo(request):
             "titulo": denuncia.titulo,
             "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
             "asunto": denuncia.asunto,
-            "fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
             "estado": denuncia.estado,

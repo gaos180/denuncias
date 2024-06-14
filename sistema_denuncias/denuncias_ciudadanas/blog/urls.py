@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from website.views import publicaciones, registro_denuncia, create_report, success, mapa, registar, login_web, obteniendo
+from website.views import publicaciones, registro_denuncia, mapa, registar, login_web, obteniendo
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
