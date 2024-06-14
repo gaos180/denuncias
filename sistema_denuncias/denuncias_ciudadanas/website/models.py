@@ -76,14 +76,14 @@ estados = [
     [2, "Finalizada"],
 ]
 class RegistroDenuncia(models.Model):
-    titulo = models.CharField(max_length=20, verbose_name= 'Ingrese titulo de denuncia')
+    titulo = models.CharField(max_length=60, verbose_name= 'Ingrese titulo de denuncia')
     causa = models.IntegerField(choices=categorias, verbose_name='Causa de conflicto')
     asunto = models.TextField(max_length=200, verbose_name='Ingrese asunto')
     fecha_suceso = models.DateField(null=True, blank=True)
     hora_suceso = models.TimeField(null=True, blank=True)
     imagen = models.ImageField(upload_to='imagenes/', default='default.jpg')
     fecha_envio = models.DateTimeField(auto_now_add=True, verbose_name='Fecha de ingreso')
-    consentimiento = models.BooleanField(default=False, verbose_name='Acepto terminos y condiciones')
+    consentimiento = models.BooleanField(default=False)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
     username = models.ForeignKey(User, on_delete=models.PROTECT, default=1)

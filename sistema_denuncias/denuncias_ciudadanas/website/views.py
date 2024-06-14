@@ -123,3 +123,6 @@ def login_web(request):
     else:
         form = AuthenticationForm()
     return render(request, 'website/login_1.html', {"form": form})
+
+def terminos_y_condiciones(request):
+    return render(request, 'website/terminos_y_condiciones.html')
