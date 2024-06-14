@@ -3,6 +3,7 @@ from .models import Report, RegistroDenuncia
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from django.utils.safestring import mark_safe
 
 class ReportForm(forms.ModelForm):
     class Meta:
@@ -37,9 +38,13 @@ class UserRegisterForm(UserCreationForm):
             raise ValidationError('Las contraseñas no coinciden.')
         return cd['password2']
 
-
-
 class RegistroDeDenuncia(forms.ModelForm):
+
+    consentimiento = forms.BooleanField(
+        required=True,
+        label=mark_safe('Acepto los <a href="/terminos-y-condiciones/" target="_blank">términos y condiciones</a>')
+    )
+    
     class Meta:
         model = RegistroDenuncia
         fields = ['titulo', 'causa', 'asunto', 'fecha_suceso', 'hora_suceso', 'imagen', 'consentimiento']
