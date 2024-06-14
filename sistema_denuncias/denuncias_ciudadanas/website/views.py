@@ -27,8 +27,6 @@ def obteniendo(request):
 
     return JsonResponse(denuncias_json, safe=False)
 
-
-# Create your views here.
 def publicaciones(request):
     publicaciones = Post.objects.all()
     form = PostForm()
@@ -67,23 +65,8 @@ def publicaciones(request):
         },
     )
 
-def create_report(request):
-    if request.method == 'POST':
-        form = ReportForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('success')  # Redirige a una página de éxito después de guardar
-    else:
-        form = ReportForm()
-    return render(request, 'website/create_report.html', {'form': form})
-
-def success(request):
-    return render(request, 'website/success.html')
-
 def mapa(request):
     return render(request, 'website/mapa.html')
-
-
 
 def registar(request):
     if request.method == 'POST':
@@ -94,7 +77,7 @@ def registar(request):
             user.last_name = form.cleaned_data.get('last_name')
             user.email = form.cleaned_data.get('email')
             user.set_password(form.cleaned_data['password1'])
-            user.is_staff = True 
+            user.is_staff = False
             user.save()
 
             group = Group.objects.get(name='denunciantes')
@@ -105,7 +88,6 @@ def registar(request):
     else:
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
-
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
@@ -126,7 +108,6 @@ def registro_denuncia(request):
             return redirect(reverse('registro_denuncia')+'?error')
 
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
-
 
 def login_web(request):
     if request.method == "POST":

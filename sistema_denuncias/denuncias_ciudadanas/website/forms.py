@@ -2,6 +2,7 @@ from django import forms
 from .models import Report, RegistroDenuncia
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
+from django.core.exceptions import ValidationError
 
 class ReportForm(forms.ModelForm):
     class Meta:
@@ -12,10 +13,6 @@ class ReportForm(forms.ModelForm):
             'description': 'Descripción de la Denuncia',
             'location': 'Localidad',
         }
-
-
-from django.contrib.auth.forms import UserCreationForm
-from django.core.exceptions import ValidationError
 
 class UserRegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, label="Nombre")
@@ -32,8 +29,13 @@ class UserRegisterForm(UserCreationForm):
         # Check for existing usernames (consider case-insensitive check if needed)
         if User.objects.filter(username__iexact=username).exists():
             raise ValidationError("El nombre de usuario ya existe. Por favor, elija otro nombre.")
-
         return username
+    
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password1'] != cd['password2']:
+            raise ValidationError('Las contraseñas no coinciden.')
+        return cd['password2']
 
 
 
