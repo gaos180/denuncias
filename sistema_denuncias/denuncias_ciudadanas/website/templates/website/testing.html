@@ -1,0 +1,69 @@
+{% extends "./mapa.html" %}
+{% block content %}
+
+
+<p>Total denuncias: {{ denuncias|length }}</p> <!-- Muestra la longitud de la lista de denuncias -->
+
+<table>
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Asunto</th>
+            <th>Causa</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for denuncia in denuncias %}
+        <tr>
+            <td>{{ denuncia.titulo }}</td>
+            <td>{{ denuncia.asunto }}</td>
+            <td>{{ denuncia.get_causa_display }}</td>
+            <td>{{ denuncia.get_estado_display }}</td>
+        </tr>
+        <div class="card mb-3">
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ denuncia.id }}">
+                <div class="card-header text-uppercase d-flex justify-content-between align-items-center">
+                    <strong>{{ denuncia.titulo }}</strong>
+                    <div class="btn-group" role="group">
+
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            modalEditar
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p>{{ denuncia.asunto }}</p>
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"> {{ denuncia.titulo }}</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                        {{denuncia.asunto}}
+                        <span>||</span>
+                        {{denuncia.id}}
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button class="btn btn-warning" type="submit" name="editar">Guardar</button>
+
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endfor %}
+    </tbody>
+</table>
+
+  
+  
+{% endblock %}

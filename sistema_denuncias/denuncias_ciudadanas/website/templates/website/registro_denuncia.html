@@ -69,18 +69,18 @@
 
                         </div>
                     </div>
-                    <input class="btn btn-primary col-md-11" type="submit" value="Enviar Mensaje" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
+                    <input class="btn btn-primary col-md-11" type="submit" value="Enviar denuncia" {% if 'ok' in request.GET %}disabled{% endif %}{% if 'error' in request.GET %}disabled{% endif %}>
                 </form>
 
                 {% if 'ok' in request.GET %}
                     <div class="alert alert-success mt-5" role="alert">
-                        <strong>El mensaje se ha enviado correctamente</strong>
+                        <strong>La denuncia se ha enviado correctamente</strong>
                     </div>
                 {% endif %}
 
                 {% if 'error' in request.GET %}
                     <div class="alert alert-danger mt-5" role="alert">
-                        <strong>El mensaje no ha podido ser enviado. Por favor, intente más tarde</strong>
+                        <strong>La denuncia no ha podido ser enviado. Por favor, intente más tarde</strong>
                     </div>
                 {% endif %}            
             </div>
