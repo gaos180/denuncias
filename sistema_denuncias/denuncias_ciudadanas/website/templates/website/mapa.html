@@ -164,42 +164,53 @@
             margin-left: 5px;
             margin-right: 5px;
         }
+    
     </style>
-    <nav class="py-2 bg-dark border-bottom">
-        <div class="container d-flex flex-wrap">
-            <ul class="nav me-auto">
-                <a class="nav-link fw-bold" href="{% url 'mapa' %}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
-                        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
-                    </svg>
-                </a>
-            </ul>
-            {% if request.user.is_authenticated %}
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link text-white">Hola, {{ user.first_name }} {{ user.last_name }}</a>
-                </li>
-                <li>
-                    <a class="nav-link text-white fw-bold border" href="{% url 'registro_denuncia' %}" style="background-color: transparent;border-radius: 8px; color: #fff; padding: 10px 20px; text-decoration: none ;">Denunciar ahora</a>
-                </li>
-                <li>
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit" id="cerrar" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; " >Cerrar sesión</button>
-                    </form>
-                </li>
-            {% else %}
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link fw-bold" href="{% url "login" %}" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; ">Iniciar sesión</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link fw-bold border" href="{% url "register" %}" style="background-color: transparent; border-radius: 8px; color: #fff; padding: 10px 20px; text-decoration: none ;">Crear usuario</a>
-                </li>
-            {% endif %}
-            </ul>
-        </div>
-    </nav>
+<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{% url 'mapa' %}">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
+        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
+      </svg>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-list" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+        </svg>
+      </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      {% if request.user.is_authenticated %}
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link text-light">Hola, {{ user.first_name }} {{ user.last_name }}</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light fw-bold btn btn-light" href="{% url 'registro_denuncia' %}" style="background-color: transparent; border-radius: 8px; text-decoration: none;">Denunciar ahora</a>
+        </li>
+        <li class="nav-item">
+          <form method="post" action="{% url 'logout' %}" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light" style="border-radius: 8px; color: #212529; font-weight: 1000;">Cerrar sesión</button>
+          </form>
+        </li>
+      </ul>
+          {% if request.user.is_superuser %}
+              <a class="nav-link text-light">Cuenta administrador</a>
+          {% endif %}
+          
+      {% else %}
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link fw-bold btn btn-light" href="{% url 'login' %}" style="border-radius: 8px; color: #212529; padding: 10px 20px; font-weight: 1000;">Iniciar sesión</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fw-bold border btn btn-outline-light text-light" href="{% url 'register' %}" style="border-radius: 8px; padding: 10px 20px;">Crear usuario</a>
+        </li>
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</nav>
 
     {% block content %}
     <div class="container-fluid">

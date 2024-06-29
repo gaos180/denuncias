@@ -74,6 +74,8 @@ estados = [
     [0, "En revisión"],
     [1, "En procedimiento"],
     [2, "Finalizada"],
+    [3, "Rechazada"],
+
 ]
 class RegistroDenuncia(models.Model):
     titulo = models.CharField(max_length=60, verbose_name= 'Ingrese titulo de denuncia')

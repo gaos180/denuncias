@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
+#from django.contrib.auth.decorators import login_required
 
 
 def obteniendo(request):
@@ -27,46 +28,16 @@ def obteniendo(request):
 
     return JsonResponse(denuncias_json, safe=False)
 
-def publicaciones(request):
-    publicaciones = Post.objects.all()
-    form = PostForm()
-    editing = False
-    id = None
-    if request.method == "POST":
-        print(request.POST)
-        if "eliminar" in request.POST:
-            Post.objects.get(id=request.POST.get("id")).delete()
-        elif "editar" in request.POST:
-            post = Post.objects.get(id=request.POST.get("id"))
-            form = PostForm(instance=post)
-            editing = True
-            id = post.id
-        elif "guardar" in request.POST:
-            form = PostForm(request.POST)
-            if form.is_valid():
-                if request.POST.get("editing") == "True":
-                    post = Post.objects.get(id=request.POST.get("id"))
-                    post.titulo = form.cleaned_data["titulo"]
-                    post.contenido = form.cleaned_data["contenido"]
-                    post.save()
-                    editing = False
-                    form = PostForm()
-                else:
-                    form.save()
-                    form = PostForm()
-    return render(
-        request,
-        "website/publicaciones.html",
-        {
-            "publicaciones": publicaciones,
-            "formulario": form,
-            "editing": editing,
-            "id": id,
-        },
-    )
 
 def mapa(request):
-    return render(request, 'website/mapa.html')
+    context = {}
+    if request.user.is_superuser:
+        context['message'] = 'Welcome, Superuser!'
+        return render(request, 'website/testing.html', context)
+    else:
+        context['message'] = 'Welcome, Regular User!'
+        return render(request, 'website/mapa.html', context)
+
 
 def registar(request):
     if request.method == 'POST':
@@ -109,6 +80,14 @@ def registro_denuncia(request):
 
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
+
+def administracion(request):
+    registro = RegistroDenuncia.objects.all()
+    print(registro)  # Imprime las denuncias en la consola del servidor
+    return render(request, 'website/testing.html', {'denuncias': registro})
+
+
+
 def login_web(request):
     if request.method == "POST":
         form = AuthenticationForm(data=request.POST)
@@ -119,10 +98,15 @@ def login_web(request):
             )
             if user is not None:
                 login(request, user)
-                return render(request, "website/mapa.html")
+                if request.user.is_superuser:
+                    return redirect(reverse('administracion'))  # Redirige a la URL de administración
+                else:
+                    return redirect(reverse('mapa'))
     else:
         form = AuthenticationForm()
     return render(request, 'website/login_1.html', {"form": form})
+
+
 
 def terminos_y_condiciones(request):
     return render(request, 'website/terminos_y_condiciones.html')
