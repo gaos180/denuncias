@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from website.views import registro_denuncia, mapa, registar, login_web, obteniendo, administracion
+from website.views import publicaciones, registro_denuncia, administracion, mapa, registar, login_web, obteniendo, terminos_y_condiciones
 from django.contrib.auth.views import LogoutView
 from django.conf import settings
 from django.conf.urls.static import static
@@ -16,6 +16,7 @@ urlpatterns = [
     path('ingreso_denuncia/', registro_denuncia, name='registro_denuncia'),
     path('api/denuncias/', obteniendo, name='obteniendo'),
     path('administracion/', administracion, name='administracion'),
+    path('terminos-y-condiciones/', terminos_y_condiciones, name='terminos-y-condiciones'),
 ]
 
 if settings.DEBUG:

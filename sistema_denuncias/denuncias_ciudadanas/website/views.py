@@ -19,7 +19,7 @@ def obteniendo(request):
             "titulo": denuncia.titulo,
             "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
             "asunto": denuncia.asunto,
-            "fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
             "estado": denuncia.estado,
@@ -79,23 +79,7 @@ def registro_denuncia(request):
             return redirect(reverse('registro_denuncia')+'?error')
 
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
-'''
-def login_web(request):
-    if request.method == "POST":
-        form = AuthenticationForm(data=request.POST)
-        if form.is_valid():
-            user = authenticate(
-                username=form.cleaned_data["username"],
-                password=form.cleaned_data["password"]
-            )
-            if user is not None:
-                login(request, user)
-                print()
-                return render(request, "website/mapa.html")
-    else:
-        form = AuthenticationForm()
-    return render(request, 'website/login_1.html', {"form": form})
-'''
+
 
 def administracion(request):
     registro = RegistroDenuncia.objects.all()
@@ -123,3 +107,6 @@ def login_web(request):
     return render(request, 'website/login_1.html', {"form": form})
 
 
+
+def terminos_y_condiciones(request):
+    return render(request, 'website/terminos_y_condiciones.html')
