@@ -1,23 +1,24 @@
 from django.shortcuts import render, redirect
-from .models import Post, PostForm, RegistroDenuncia
+from .models import Denuncia
 from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
 from django.contrib.auth.models import Group
-from .forms import ReportForm, RegistroDeDenuncia
+from .forms import RegistroDeDenuncia
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 #from django.contrib.auth.decorators import login_required
 
 
 def obteniendo(request):
-    denuncias = RegistroDenuncia.objects.all()
+    denuncias = Denuncia.objects.all()
     denuncias_json = []
     for denuncia in denuncias:
         denuncia_data = {
             "titulo": denuncia.titulo,
-            "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
+            "causa": denuncia.get_causa_display(),
             "asunto": denuncia.asunto,
             #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
             "latitude": denuncia.latitude,
@@ -30,13 +31,10 @@ def obteniendo(request):
 
 
 def mapa(request):
-    context = {}
     if request.user.is_superuser:
-        context['message'] = 'Welcome, Superuser!'
-        return render(request, 'website/testing.html', context)
+        return redirect(reverse('administracion'))  # Redirige a la URL de administración
     else:
-        context['message'] = 'Welcome, Regular User!'
-        return render(request, 'website/mapa.html', context)
+        return render(request, 'website/mapa.html')
 
 
 def registar(request):
@@ -82,10 +80,46 @@ def registro_denuncia(request):
 
 
 def administracion(request):
-    registro = RegistroDenuncia.objects.all()
-    print(registro)  # Imprime las denuncias en la consola del servidor
-    return render(request, 'website/testing.html', {'denuncias': registro})
+    registro = Denuncia.objects.all()
+    usuarios = User.objects.all()
 
+    context = {
+        'denuncias': registro,
+        'usuarios':usuarios,
+    }
+    if request.method == "POST":
+        print("le di")
+        denuncia = Denuncia.objects.get(id=request.POST.get("id"))
+        print(denuncia)
+        print(denuncia.asunto)
+        """
+        post = Denuncia.objects.get(id=request.POST.get("id"))
+        post.title = form.cleaned_data["titulo"]
+        post.content = form.cleaned_data["contenido"]
+        post.save()
+        form = DenunciaForm()
+        """
+
+    return render(request, 'website/testing.html', context)
+
+
+def editando(request):
+    print("editando")
+    denuncias = Denuncia.objects.all()
+    denuncias_json = []
+    for denuncia in denuncias:
+        denuncia_data = {
+            "titulo": denuncia.titulo,
+            "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
+            "asunto": denuncia.asunto,
+            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            "latitude": denuncia.latitude,
+            "longitude": denuncia.longitude,
+            "estado": denuncia.estado,
+        }
+        denuncias_json.append(denuncia_data)
+
+    return JsonResponse(denuncias_json, safe=False)
 
 
 def login_web(request):
@@ -99,7 +133,7 @@ def login_web(request):
             if user is not None:
                 login(request, user)
                 if request.user.is_superuser:
-                    return redirect(reverse('administracion'))  # Redirige a la URL de administración
+                    return redirect(reverse('administracion'))
                 else:
                     return redirect(reverse('mapa'))
     else:

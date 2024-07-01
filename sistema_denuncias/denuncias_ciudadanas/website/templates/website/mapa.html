@@ -188,9 +188,9 @@
           <a class="nav-link text-light fw-bold btn btn-light" href="{% url 'registro_denuncia' %}" style="background-color: transparent; border-radius: 8px; text-decoration: none;">Denunciar ahora</a>
         </li>
         <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}" class="d-inline">
+          <form method="post" action="{% url 'logout' %}" class="">
             {% csrf_token %}
-            <button type="submit" class="btn btn-light" style="border-radius: 8px; color: #212529; font-weight: 1000;">Cerrar sesión</button>
+            <button type="submit" class="btn btn-light " style="border-radius: 8px; color: #212529; font-weight: 1000;">Cerrar sesión</button>
           </form>
         </li>
       </ul>
@@ -204,7 +204,7 @@
           <a class="nav-link fw-bold btn btn-light" href="{% url 'login' %}" style="border-radius: 8px; color: #212529; padding: 10px 20px; font-weight: 1000;">Iniciar sesión</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link fw-bold border btn btn-outline-light text-light" href="{% url 'register' %}" style="border-radius: 8px; padding: 10px 20px;">Crear usuario</a>
+          <a class="nav-link fw-bold border btn text-light" href="{% url 'register' %}" style="border-radius: 8px; padding: 10px 20px;">Crear usuario</a>
         </li>
       </ul>
       {% endif %}
@@ -251,7 +251,7 @@
             <div class="col-md-7">
                 <div id="map" class="card"></div>
             </div>
-            <div id="denunciaModal" class="card col-md-3" style="display: none;">
+            <div id="denunciaModal" class="card col-md-3 modal" style="display: none;" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="card-content">
                         <div class="card-header">
