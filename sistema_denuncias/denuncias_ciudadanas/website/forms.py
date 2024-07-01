@@ -1,19 +1,10 @@
 from django import forms
-from .models import Report, RegistroDenuncia
+from .models import Denuncia
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.utils.safestring import mark_safe
 
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = ['title', 'description', 'location']
-        labels = {
-            'title': 'Título de Denuncia',
-            'description': 'Descripción de la Denuncia',
-            'location': 'Localidad',
-        }
 
 class UserRegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=30, required=True, label="Nombre")
@@ -46,7 +37,7 @@ class RegistroDeDenuncia(forms.ModelForm):
     )
     
     class Meta:
-        model = RegistroDenuncia
+        model = Denuncia
         fields = ['titulo', 'causa', 'asunto', 'fecha_suceso', 'hora_suceso', 'imagen', 'consentimiento']
         widgets = {
             'fecha_suceso': forms.DateInput(attrs={'type': 'date'}),
