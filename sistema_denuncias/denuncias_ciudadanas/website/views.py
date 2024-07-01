@@ -58,6 +58,8 @@ def registar(request):
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
 
+from django.contrib.auth import get_user_model
+
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
 
@@ -69,6 +71,10 @@ def registro_denuncia(request):
             longitude = request.POST.get('longitude')
             denuncia.latitude = float(latitude)
             denuncia.longitude = float(longitude)
+            user = request.user
+            denuncia.username = user 
+            #username = user.get_username()
+            #print(username)
             denuncia.save()
             #Se da aviso que todo esta bien
             return redirect(reverse('registro_denuncia')+'?ok')
