@@ -1,0 +1,60 @@
+{% extends "./baseadmin.html" %}
+
+{% block content %}
+<style>
+
+</style>
+<div>
+  <H1>Usuarios</H1>
+  <hr style="border: 3px solid black; border-radius: 5px;">
+  <div class="text-end pb-1" >
+      <a href="" class="btn btn-outline-success" style="font-size: 1.3rem;">
+        <i class='bx bx-add-to-queue' >
+          <span>Agregar Usuario</span>
+        </i>
+      </a>
+  </div>
+  <div class="container_2 px-5">
+  <table class="mt-5 table table-hover table-responsive">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Nombre</th>
+        <th>Apellido </th>
+        <th>Email</th>
+        <th>Staff</th>
+        <th>Ultima Sesion</td>
+        <th>Fecha Registro</td>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user_l in lista_user %}
+        <tr class="overflow-wrap">
+          <td style="font-size: 1.2rem;">{{user_l.id|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.apellido|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.email|default:"-"}}</td>
+          {% if user_l.activo %}
+              <td style="font-size: 2rem;color:green;"><i class='bx bxs-check-circle' ></i></td>
+          {% else %}
+              <td style="font-size: 2rem;color:red;"><i class='bx bxs-x-circle' ></i></td>
+          {% endif%}
+          <td style="font-size: 1.5rem;">{{user_l.sesion|date:"d-m-Y h:i A"|default:"-"}}</td>
+          <td style="font-size: 1.5rem;">{{user_l.union|default:"-"|date:"d-m-Y h:i A"}}</td>
+          <td>
+            <div class="btn-group px-4">
+              <a href="" class="btn btn-success"><i class='bx bx-edit-alt' ></i></a>
+              <a href="" class="btn text-white" style="background-color:black;"><i class='bx bxs-show' ></i> </a>
+              <a href="" class="btn text-white" style="background-color:purple;"><i class='bx bx-trash' ></i> </a>
+            </div>
+          </td>
+        </tr>
+      {% endfor%}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endblock content %}
