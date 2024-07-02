@@ -91,6 +91,10 @@ def administracion(request):
     form = RegistroDeDenuncia()
 
     if request.method == "POST":
+        if "ver" in request.POST:
+            print("ve")
+        elif "editar" in request.POST:
+            print("edita")
         print("Datos del formulario POST:", request.POST)
         form = RegistroDeDenuncia(request.POST)
         if form.is_valid():
@@ -100,6 +104,7 @@ def administracion(request):
             denuncia.causa = form.cleaned_data["causa"]
             denuncia.estado = request.POST.get("Select")
             denuncia.save()
+            # Para eliminar denuncia.delete()
             form = RegistroDeDenuncia()
         else:
             print("Errores del formulario:", form.errors)
