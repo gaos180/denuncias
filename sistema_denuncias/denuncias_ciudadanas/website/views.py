@@ -122,23 +122,85 @@ def administracion(request):
     return render(request, 'website/testing.html', context)
 
 
-def editando(request):
-    print("editando")
-    denuncias = Denuncia.objects.all()
+
+
+def base_admin(request):
+    return render(request, 'website/baseadmin.html')
+
+
+
+def base_admin_denuncia(request):
+    registro = Denuncia.objects.all()
+    usuarios = User.objects.all()
+    form = RegistroDeDenuncia()
+
+    if request.method == "POST":
+        if "ver" in request.POST:
+            print("ver")
+        elif "editar" in request.POST:
+            print("editar")
+            form = RegistroDeDenuncia(request.POST)
+            if form.is_valid():
+                denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+                denuncia.titulo = form.cleaned_data["titulo"]
+                denuncia.asunto = form.cleaned_data["asunto"]
+                denuncia.causa = form.cleaned_data["causa"]
+                denuncia.estado = request.POST.get("Select")
+                denuncia.fecha_suceso = form.cleaned_data["fecha_suceso"]
+                denuncia.hora_suceso = form.cleaned_data["hora_suceso"]
+                denuncia.consentimiento = form.cleaned_data["consentimiento"]
+                denuncia.save()
+            else:
+                print("Errores del formulario:", form.errors)
+        elif "eliminar" in request.POST:
+            print("eliminar")
+            denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+            denuncia.delete()
+
+    context = {
+        'denuncias': registro,
+        'usuarios': usuarios,
+        'form': form,
+    }
+
+    """
+    lista = Denuncia.objects.all()
     denuncias_json = []
-    for denuncia in denuncias:
+    for denuncia in lista:
         denuncia_data = {
+            "id": denuncia.id,
             "titulo": denuncia.titulo,
             "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
             "asunto": denuncia.asunto,
-            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
-            "estado": denuncia.estado,
+            "estado": denuncia.get_estado_display(),
+            "username": denuncia.username,
+            "image": denuncia.imagen,
         }
         denuncias_json.append(denuncia_data)
+    return render(request, 'website/lista.html', {"lista":denuncias_json})
+    """
 
-    return JsonResponse(denuncias_json, safe=False)
+    return render(request, 'website/lista.html', context)
+
+def base_admin_usuario(request):
+    lista_user = User.objects.all()
+    usermember = User.objects.all()
+    user_json = []
+    for user_d in usermember:
+        user_data = {
+            "id": user_d.id,
+            "username": user_d.username,
+            "nombre": user_d.first_name,
+            "apellido": user_d.last_name,
+            "activo": user_d.is_staff,
+            "email": user_d.email,
+            "union": user_d.date_joined,
+            "sesion": user_d.last_login,
+        }
+        user_json.append(user_data)
+    return render(request, 'website/lista_user.html', {"lista_user":user_json})
 
 
 def login_web(request):

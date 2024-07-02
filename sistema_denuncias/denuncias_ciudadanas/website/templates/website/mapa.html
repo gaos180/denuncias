@@ -196,6 +196,7 @@
       </ul>
           {% if request.user.is_superuser %}
               <a class="nav-link text-light">Cuenta administrador</a>
+              <a href="{% url 'panel_admin' %}" class="nav-link text-light btn-primary", style="background-color: green;"> Administración</a>
           {% endif %}
           
       {% else %}
