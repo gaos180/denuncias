@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Denuncia
 from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
@@ -9,6 +9,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 #from django.contrib.auth.decorators import login_required
 
 
@@ -58,7 +59,6 @@ def registar(request):
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
 
-from django.contrib.auth import get_user_model
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
@@ -88,26 +88,29 @@ def registro_denuncia(request):
 def administracion(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
+    form = RegistroDeDenuncia()
+
+    if request.method == "POST":
+        print("Datos del formulario POST:", request.POST)
+        form = RegistroDeDenuncia(request.POST)
+        if form.is_valid():
+            denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+            denuncia.titulo = form.cleaned_data["titulo"]
+            denuncia.asunto = form.cleaned_data["asunto"]
+            denuncia.causa = form.cleaned_data["causa"]
+            denuncia.estado = request.POST.get("Select")
+            denuncia.save()
+            form = RegistroDeDenuncia()
+        else:
+            print("Errores del formulario:", form.errors)
 
     context = {
         'denuncias': registro,
-        'usuarios':usuarios,
+        'usuarios': usuarios,
+        'form': form,
     }
-    if request.method == "POST":
-        print("le di")
-        denuncia = Denuncia.objects.get(id=request.POST.get("id"))
-        print(denuncia)
-        print(denuncia.asunto)
-        """
-        post = Denuncia.objects.get(id=request.POST.get("id"))
-        post.title = form.cleaned_data["titulo"]
-        post.content = form.cleaned_data["contenido"]
-        post.save()
-        form = DenunciaForm()
-        """
-
+    
     return render(request, 'website/testing.html', context)
-
 
 def editando(request):
     print("editando")
