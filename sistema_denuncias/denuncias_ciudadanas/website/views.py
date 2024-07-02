@@ -92,30 +92,35 @@ def administracion(request):
 
     if request.method == "POST":
         if "ver" in request.POST:
-            print("ve")
+            print("ver")
         elif "editar" in request.POST:
-            print("edita")
-        print("Datos del formulario POST:", request.POST)
-        form = RegistroDeDenuncia(request.POST)
-        if form.is_valid():
+            print("editar")
+            form = RegistroDeDenuncia(request.POST)
+            if form.is_valid():
+                denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+                denuncia.titulo = form.cleaned_data["titulo"]
+                denuncia.asunto = form.cleaned_data["asunto"]
+                denuncia.causa = form.cleaned_data["causa"]
+                denuncia.estado = request.POST.get("Select")
+                denuncia.fecha_suceso = form.cleaned_data["fecha_suceso"]
+                denuncia.hora_suceso = form.cleaned_data["hora_suceso"]
+                denuncia.consentimiento = form.cleaned_data["consentimiento"]
+                denuncia.save()
+            else:
+                print("Errores del formulario:", form.errors)
+        elif "eliminar" in request.POST:
+            print("eliminar")
             denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
-            denuncia.titulo = form.cleaned_data["titulo"]
-            denuncia.asunto = form.cleaned_data["asunto"]
-            denuncia.causa = form.cleaned_data["causa"]
-            denuncia.estado = request.POST.get("Select")
-            denuncia.save()
-            # Para eliminar denuncia.delete()
-            form = RegistroDeDenuncia()
-        else:
-            print("Errores del formulario:", form.errors)
+            denuncia.delete()
 
     context = {
         'denuncias': registro,
         'usuarios': usuarios,
         'form': form,
     }
-    
+
     return render(request, 'website/testing.html', context)
+
 
 def editando(request):
     print("editando")
