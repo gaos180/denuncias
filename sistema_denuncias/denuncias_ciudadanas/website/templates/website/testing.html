@@ -32,56 +32,71 @@
                     </button>
                 </td>
             </tr>
-            <div class="modal fade" id="modal{{ denuncia.id }}" tabindex="-1" aria-labelledby="modalLabel{{ denuncia.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="modalLabel{{ denuncia.id }}">Editar Denuncia: {{ denuncia.titulo }}</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <form method="POST">
-                                {% csrf_token %}
-                                <input type="hidden" name="id" value="{{ denuncia.id }}">
-                                <div class="form-group">
-                                    <label for="titulo-{{ denuncia.id }}" class="col-form-label">Título:</label>
-                                    <input type="text" class="form-control" id="titulo-{{ denuncia.id }}" name="titulo" value="{{ denuncia.titulo }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Denunciante-{{ denuncia.username }}" class="col-form-label">Denunciante:</label>
-                                    <input type="text" class="form-control" id="denunciante-{{ denuncia.id }}" name="denunciante" value="{{ denuncia.username }}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="asunto-{{ denuncia.id }}" class="col-form-label">Asunto:</label>
-                                    <textarea class="form-control" id="asunto-{{ denuncia.id }}" name="asunto">{{ denuncia.asunto }}</textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label for="causa-{{ denuncia.id }}" class="col-form-label">Causa:</label>
-                                    <select id="causa-{{ denuncia.id }}" name="causa" class="form-select">
-                                        <option value="0">Lugar de explotación</option>
-                                        <option value="1">Uso y/o contaminación de recursos naturales</option>
-                                        <option value="2">Residuos, emisiones e inmisiones</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="estado-{{ denuncia.id }}" class="col-form-label">Estado:</label>
-                                    <select id="estado-{{ denuncia.id }}" name="Select" class="form-select">
-                                        <option value="0">En revisión</option>
-                                        <option value="1">En procedimiento</option>
-                                        <option value="2">Finalizada</option>
-                                        <option value="3">Rechazada</option>
-                                        <option value="4">Deshabilitada</option>
-                                      </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                    <button class="btn btn-warning" type="submit" name="editar">Guardar</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+
+            <!-- Modal -->
+<div class="modal fade" id="modal{{ denuncia.id }}" tabindex="-1" aria-labelledby="modalLabel{{ denuncia.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ denuncia.id }}">Editar Denuncia: {{ denuncia.titulo }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            <div class="modal-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="id" value="{{ denuncia.id }}">
+                    <div class="form-group">
+                        <label for="titulo-{{ denuncia.id }}" class="col-form-label">Título:</label>
+                        <input type="text" class="form-control" id="titulo-{{ denuncia.id }}" name="titulo" value="{{ denuncia.titulo }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="Denunciante-{{ denuncia.username }}" class="col-form-label">Denunciante:</label>
+                        <input type="text" class="form-control" id="denunciante-{{ denuncia.id }}" name="denunciante" value="{{ denuncia.username }}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="asunto-{{ denuncia.id }}" class="col-form-label">Asunto:</label>
+                        <textarea class="form-control" id="asunto-{{ denuncia.id }}" name="asunto">{{ denuncia.asunto }}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="causa-{{ denuncia.id }}" class="col-form-label">Causa:</label>
+                        <select id="causa-{{ denuncia.id }}" name="causa" class="form-select">
+                            <option value="0" {% if denuncia.causa == 0 %}selected{% endif %}>Lugar de explotación</option>
+                            <option value="1" {% if denuncia.causa == 1 %}selected{% endif %}>Uso y/o contaminación de recursos naturales</option>
+                            <option value="2" {% if denuncia.causa == 2 %}selected{% endif %}>Residuos, emisiones e inmisiones</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="estado-{{ denuncia.id }}" class="col-form-label">Estado:</label>
+                        <select id="estado-{{ denuncia.id }}" name="Select" class="form-select">
+                            <option value="0" {% if denuncia.estado == 0 %}selected{% endif %}>En revisión</option>
+                            <option value="1" {% if denuncia.estado == 1 %}selected{% endif %}>En procedimiento</option>
+                            <option value="2" {% if denuncia.estado == 2 %}selected{% endif %}>Finalizada</option>
+                            <option value="3" {% if denuncia.estado == 3 %}selected{% endif %}>Rechazada</option>
+                            <option value="4" {% if denuncia.estado == 4 %}selected{% endif %}>Deshabilitada</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha_suceso-{{ denuncia.id }}" class="col-form-label">Fecha del suceso:</label>
+                        <input type="date" class="form-control" id="fecha_suceso-{{ denuncia.id }}" name="fecha_suceso" value="{{ denuncia.fecha_suceso|date:'Y-m-d' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="hora_suceso-{{ denuncia.id }}" class="col-form-label">Hora del suceso:</label>
+                        <input type="time" class="form-control" id="hora_suceso-{{ denuncia.id }}" name="hora_suceso" value="{{ denuncia.hora_suceso|time:'H:i' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="consentimiento-{{ denuncia.id }}" class="col-form-label">Consentimiento:</label>
+                        <input type="checkbox" id="consentimiento-{{ denuncia.id }}" name="consentimiento" {% if denuncia.consentimiento %}checked{% endif %}>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                        <button class="btn btn-warning" type="submit" name="editar">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
             {% endfor %}
         </tbody>
     </table>
