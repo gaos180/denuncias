@@ -1,0 +1,58 @@
+{% extends "./baseadmin.html" %}
+
+{% block content %}
+<style>
+
+</style>
+<div>
+  <H1>Denuncias</H1>
+  <hr style="border: 3px solid black; border-radius: 5px;">
+  <div class="text-end pb-1" >
+      <a href="" class="btn btn-outline-success" style="font-size: 1.3rem;">
+        <i class='bx bx-add-to-queue' >
+          <span>Agregar Denuncia</span>
+        </i>
+      </a>
+  </div>
+  <div class="container_2 px-5">
+  <table class="mt-5 table table-hover table-responsive">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Titulo</th>
+        <th>Username</th>
+        <th>Imagen </th>
+        <th>Causa</th>
+        <th>Categoria</th>
+        <th>Estado</th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for denuncia in entity %}
+        <tr class="overflow-wrap">
+          <td>{{denuncia.id}}</td>
+          <td>{{denuncia.titulo}}</td>
+          <td>{{denuncia.username}}</td>
+          <td><img src="{{denuncia.imagen.url}}" alt="" style="max-width: 64px; max-height:64px;"></td>
+          <td style="overflow: hidden;" >{{denuncia.asunto}}</td>
+          <td id="causa_td" >{{denuncia.get_causa_display}}</td>
+          <td>{{denuncia.get_estado_display}}</td>
+          <td>
+            <div class="table-cell">
+              <div class="btn-group px-4 ">
+                <a href="" class="btn btn-success"><i class='bx bx-edit-alt' ></i></a>
+                <a href="" class="btn text-white" style="background-color:black;"><i class='bx bxs-show' ></i> </a>
+                <a href="" class="btn text-white" style="background-color:purple;"><i class='bx bx-trash' ></i> </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor%}
+    </tbody>
+  </table>
+    {% include "website/paginator.html" %}
+    
+  </div>
+</div>
+{% endblock content %}

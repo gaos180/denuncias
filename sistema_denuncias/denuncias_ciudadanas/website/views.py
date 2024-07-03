@@ -1,13 +1,17 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect
-from .models import Post, PostForm, RegistroDenuncia
+from .models import Post, PostForm, RegistroDenuncia, Usuario
 from django.contrib.auth import login, authenticate
 from .forms import UserRegisterForm
 from django.contrib.auth.models import Group
-from .forms import ReportForm, RegistroDeDenuncia
+from .forms import ReportForm, RegistroDeDenuncia, User
 from django.urls import reverse
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.core.paginator import Paginator
+from django.http import Http404
 
 
 def obteniendo(request):
@@ -24,7 +28,6 @@ def obteniendo(request):
             "estado": denuncia.estado,
         }
         denuncias_json.append(denuncia_data)
-
     return JsonResponse(denuncias_json, safe=False)
 
 def publicaciones(request):
@@ -79,7 +82,6 @@ def registar(request):
             user.set_password(form.cleaned_data['password1'])
             user.is_staff = False
             user.save()
-
             group = Group.objects.get(name='denunciantes')
             user.groups.add(group)
             return render(request, "website/mapa.html")
@@ -91,7 +93,6 @@ def registar(request):
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
-
     if request.method == 'POST':
         registro_denuncia = RegistroDeDenuncia(request.POST, request.FILES)
         if registro_denuncia.is_valid():
@@ -106,7 +107,6 @@ def registro_denuncia(request):
         else:
             #Se notifica error
             return redirect(reverse('registro_denuncia')+'?error')
-
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
 def login_web(request):
@@ -123,3 +123,73 @@ def login_web(request):
     else:
         form = AuthenticationForm()
     return render(request, 'website/login_1.html', {"form": form})
+
+
+
+
+
+
+def base_admin(request):
+    return render(request, 'website/baseadmin.html')
+
+
+
+
+def base_admin_denuncia(request):
+    lista = RegistroDenuncia.objects.all()
+    page_ = request.GET.get('page',1)
+    try:    
+        paginator = Paginator(lista, 2)
+        lista = paginator.page(page_)
+    except: 
+        raise Http404
+    
+    denuncias_json = []
+    denuncias = {
+        "entity":lista,
+        "paginator":paginator
+    }
+    #for denuncia in lista:
+    #    denuncia_data = {
+    #        "entity":denuncia,
+    #        "id": denuncia.id,
+    #        "titulo": denuncia.titulo,
+    #        "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
+    #        "asunto": denuncia.asunto,
+    #        "latitude": denuncia.latitude,
+    #        "longitude": denuncia.longitude,
+    #        "estado": denuncia.get_estado_display(),
+    #        "username": denuncia.username,
+    #        "image": denuncia.imagen,
+    #    }
+    #    denuncias_json.append(denuncia_data)
+    return render(request, 'website/lista.html', denuncias)
+
+
+def base_admin_usuario(request):
+    lista_user = User.objects.all()
+    page_2 = request.GET.get('page',1)
+    try:    
+        paginator = Paginator(lista_user, 2)
+        lista_user = paginator.page(page_2)
+    except: 
+        raise Http404
+    
+    denuncias_usurios = {
+        "entity":lista_user,
+        "paginator":paginator
+    }
+    user_json = []
+    """for user_d in usermember:
+        user_data = {
+            "id": user_d.id,
+            "username": user_d.username,
+            "nombre": user_d.first_name,
+            "apellido": user_d.last_name,
+            "activo": user_d.is_staff,
+            "email": user_d.email,
+            "union": user_d.date_joined,
+            "sesion": user_d.last_login,
+        }
+        user_json.append(user_data)"""
+    return render(request, 'website/lista_user.html', denuncias_usurios)

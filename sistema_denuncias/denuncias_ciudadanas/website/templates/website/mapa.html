@@ -143,16 +143,19 @@
     </style>
     <nav class="py-2 bg-dark border-bottom">
         <div class="container d-flex flex-wrap">
-            <ul class="nav me-auto">
+            <ul class="navbar-nav me-auto">
                 <a class="nav-link fw-bold" href="{% url 'mapa' %}">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
                         <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
                     </svg>
-
                 </a>
             </ul>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 {% if request.user.is_authenticated %}
-                <ul class="nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link text-white">Hola, {{ user.first_name }} {{ user.last_name }}</a>
                     </li>
@@ -165,18 +168,18 @@
                             <button type="submit" id="cerrar" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; " >Cerrar sesión</button>
                         </form>
                     </li>
-
+                </ul>
                 {% else %}
-                <ul class="nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link fw-bold" href="{% url "login" %}" style="background-color: white; border-radius: 8px; color: #212529; padding: 10px 20px; cursor: pointer;font-weight: 1000; ">Iniciar sesión</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold border" href="{% url "register" %}" style="background-color: transparent; border-radius: 8px; color: #fff; padding: 10px 20px; text-decoration: none ;">Crear usuario</a>
+                        <a class="nav-link fw-bold" href="{% url "register" %}" style="background-color: transparent; border-radius: 8px; color: #fff; padding: 10px 20px; text-decoration: none ;">Crear usuario</a>
                     </li>
-
+                </ul>
                 {% endif %}
-            </ul>
+            </div>
         </div>
     </nav>
 
