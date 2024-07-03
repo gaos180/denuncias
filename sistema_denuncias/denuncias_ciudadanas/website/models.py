@@ -31,7 +31,7 @@ class Denuncia(models.Model):
     consentimiento = models.BooleanField(default=False)
     latitude = models.FloatField(default=0)
     longitude = models.FloatField(default=0)
-    username = models.ForeignKey(User, on_delete=models.PROTECT, default=1)
+    username = models.ForeignKey(User, on_delete=models.CASCADE, default=1)
     estado = models.IntegerField(choices=estados, verbose_name='Estado de la denuncia', default=0)
 
 

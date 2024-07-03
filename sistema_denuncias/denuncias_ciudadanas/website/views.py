@@ -11,6 +11,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 #from django.contrib.auth.decorators import login_required
+from .forms import RegistroDeUsuario
 
 
 def obteniendo(request):
@@ -33,7 +34,7 @@ def obteniendo(request):
 
 def mapa(request):
     if request.user.is_superuser:
-        return redirect(reverse('administracion'))  # Redirige a la URL de administración
+        return redirect(reverse('panel_admin'))  # Redirige a la URL de administración
     else:
         return render(request, 'website/mapa.html')
 
@@ -162,30 +163,55 @@ def base_admin_denuncia(request):
         'usuarios': usuarios,
         'form': form,
     }
-
-    """
-    lista = Denuncia.objects.all()
-    denuncias_json = []
-    for denuncia in lista:
-        denuncia_data = {
-            "id": denuncia.id,
-            "titulo": denuncia.titulo,
-            "causa": denuncia.get_causa_display(),  # Usa get_FOO_display() para campos con opciones
-            "asunto": denuncia.asunto,
-            "latitude": denuncia.latitude,
-            "longitude": denuncia.longitude,
-            "estado": denuncia.get_estado_display(),
-            "username": denuncia.username,
-            "image": denuncia.imagen,
-        }
-        denuncias_json.append(denuncia_data)
-    return render(request, 'website/lista.html', {"lista":denuncias_json})
-    """
-
     return render(request, 'website/lista.html', context)
 
 def base_admin_usuario(request):
-    lista_user = User.objects.all()
+    usuarios = User.objects.all()
+    form = RegistroDeUsuario()
+
+    if request.method == "POST":
+        if "ver" in request.POST:
+            print("ver")
+        elif "editar" in request.POST:
+            print("editar")
+            form = RegistroDeUsuario(request.POST)
+            if form.is_valid():
+                usuario = get_object_or_404(User, id=request.POST.get("id"))
+                usuario.first_name = form.cleaned_data["first_name"]
+                usuario.last_name = form.cleaned_data["last_name"]
+                usuario.email = form.cleaned_data["email"]
+                usuario.is_staff = request.POST.get("is_staff") == 'on'
+                usuario.save()
+            else:
+                print("Errores del formulario:", form.errors)
+        elif "eliminar" in request.POST:
+            print("eliminar")
+            usuario = get_object_or_404(User, id=request.POST.get("id"))
+            usuario.delete()
+
+    user_json = []
+    for user_d in usuarios:
+        user_data = {
+            "id": user_d.id,
+            "username": user_d.username,
+            "nombre": user_d.first_name,
+            "apellido": user_d.last_name,
+            "activo": user_d.is_staff,
+            "email": user_d.email,
+            "union": user_d.date_joined,
+            "sesion": user_d.last_login,
+        }
+        user_json.append(user_data)
+
+    context = {
+        "usuarios": usuarios,
+        "lista_user": user_json,
+        "form": form,
+    }
+    return render(request, 'website/lista_user.html', context)
+
+"""
+def base_admin_usuario(request):
     usermember = User.objects.all()
     user_json = []
     for user_d in usermember:
@@ -201,6 +227,7 @@ def base_admin_usuario(request):
         }
         user_json.append(user_data)
     return render(request, 'website/lista_user.html', {"lista_user":user_json})
+"""
 
 
 def login_web(request):
@@ -214,7 +241,7 @@ def login_web(request):
             if user is not None:
                 login(request, user)
                 if request.user.is_superuser:
-                    return redirect(reverse('administracion'))
+                    return redirect(reverse('panel_admin'))
                 else:
                     return redirect(reverse('mapa'))
     else:

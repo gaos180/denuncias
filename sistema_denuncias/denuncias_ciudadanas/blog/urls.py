@@ -18,7 +18,7 @@ urlpatterns = [
     path('administracion/', administracion, name='administracion'),
     path('terminos-y-condiciones/', terminos_y_condiciones, name='terminos-y-condiciones'),
 
-    path('a', base_admin, name='panel_admin'),
+    path('admin', base_admin, name='panel_admin'),
     path('lista/', base_admin_denuncia, name='panel_admin_denuncia'),
     path('lista_user/', base_admin_usuario, name='panel_admin_user'),
 
