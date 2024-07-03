@@ -43,3 +43,20 @@ class RegistroDeDenuncia(forms.ModelForm):
             'fecha_suceso': forms.DateInput(attrs={'type': 'date'}),
             'hora_suceso': forms.TimeInput(attrs={'type': 'time'}),
         }
+
+class RegistroDeUsuario(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'is_staff']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apellido'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'is_staff': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+        labels = {
+            'first_name': 'Nombre',
+            'last_name': 'Apellido',
+            'email': 'Email',
+            'is_staff': 'Staff',
+        }
