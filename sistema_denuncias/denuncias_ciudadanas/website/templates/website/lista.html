@@ -1,4 +1,5 @@
 {% extends "./baseadmin.html" %}
+{% if request.user.is_staff %}
 
 {% block content %}
 <style>
@@ -7,7 +8,7 @@
 <div>
   <H1>Denuncias</H1>
   <hr style="border: 3px solid black; border-radius: 5px;">
-  <div class="text-end pb-1" >
+  <div class="text-end pb-1">
       <a href="{% url 'registro_denuncia' %}" class="btn btn-outline-success" style="font-size: 1.3rem;">
         <i class='bx bx-add-to-queue'>
           <span>Agregar Denuncia</span>
@@ -23,7 +24,6 @@
         <th>Username</th>
         <th>Imagen </th>
         <th>Causa</th>
-        <th>Categoria</th>
         <th>Estado</th>
         <th class="text-center">Acciones</th>
       </tr>
@@ -34,9 +34,8 @@
           <td>{{denuncia.id}}</td>
           <td>{{denuncia.titulo}}</td>
           <td>{{denuncia.username}}</td>
-          <td><img src="{{denuncia.image.url}}" alt="" style="max-width: 64px; max-height:64px;"></td>
+          <td><img src="{{denuncia.imagen.url}}" alt="" style="max-width: 64px; max-height:64px;"></td>
           <td class="overflow">{{denuncia.asunto}}</td>
-          <td class="causa_td">{{ denuncia.get_causa_display }}</td>
           <td>{{ denuncia.get_estado_display }}</td>
           <td>
             <div class="btn-group px-4">
@@ -46,18 +45,10 @@
               <button type="button" class="btn text-white" style="background-color:black;" data-bs-toggle="modal" data-bs-target="#modal-ver{{ denuncia.id }}" name="ver">
                 <i class='bx bxs-show' ></i>
               </button>
-              <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ denuncia.id }}">
-                <button type="submit" style= "background-color:purple;"class="btn text-white" name="eliminar">
-                  <i class='bx bx-trash' ></i> 
-                </button>
-            </form>
+              <button type="button" class="btn text-white" style="background-color:purple;" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ denuncia.id }}">
+                <i class='bx bx-trash' ></i>
+              </button>
             </div>
-          </td>
-          <td>
-
-
           </td>
         </tr>
       
@@ -182,7 +173,7 @@
                         </div>
                         <div class="form-group">
                             <label for="consentimiento-{{ denuncia.id }}" class="col-form-label">Consentimiento:</label>
-                            <input type="checkbox" id="consentimiento-{{ denuncia.id }}" name="consentimiento" {% if denuncia.consentimiento %}checked{% endif %} readonly>
+                            <input type="checkbox" id="consentimiento-{{ denuncia.id }}" name="consentimiento" {% if denuncia.consentimiento %}checked{% endif %} disabled>
                         </div>
                         <div class="form-group">
                             <label class="col-form-label"> Imagen de contexto: </label>
@@ -198,9 +189,33 @@
         </div>
       </div>
 
-      {% endfor%}
+      <!-- Modal Eliminar -->
+      <div class="modal fade" id="modal-eliminar{{ denuncia.id }}" tabindex="-1" aria-labelledby="modalEliminarLabel{{ denuncia.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalEliminarLabel{{ denuncia.id }}">Confirmar Eliminación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              ¿Está seguro de que desea eliminar esta denuncia titulada "{{ denuncia.titulo }}"?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ denuncia.id }}">
+                <button type="submit" class="btn btn-danger" name="eliminar"> Eliminar
+                </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      {% endfor %}
     </tbody>
   </table>
   </div>
 </div>
-{% endblock content %}
+{% endblock %}
+{% endif %}
