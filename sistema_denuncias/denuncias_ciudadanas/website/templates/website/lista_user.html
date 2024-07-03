@@ -1,9 +1,10 @@
 {% extends "./baseadmin.html" %}
+{% if request.user.is_staff %}
 
 {% block content %}
-<style>
-/* Aquí puedes agregar tus estilos CSS */
-</style>
+
+
+
 <div>
   <H1>Usuarios</H1>
   <hr style="border: 3px solid black; border-radius: 5px;">
@@ -156,6 +157,34 @@
               </div>
           </div>
         </div>
+<!-- Modal No puede eliminar -->
+<div class="modal fade" id="modal-eliminar{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Eliminar Usuario: {{ user_l.username }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ user_l.id }}">
+                  <p>¿Estás seguro de que deseas eliminar a {{ user_l.username }}?</p>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                      <button class="btn btn-danger" type="submit" name="eliminar">Eliminar</button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+    {% if no_puede %}
+    <span>
+      No te puedes borrar a ti mismo, al menos en esta página aquí
+    </span>
+    {% endif %}
+
 
       {% endfor %}
     </tbody>
@@ -163,3 +192,4 @@
   </div>
 </div>
 {% endblock %}
+{% endif %}

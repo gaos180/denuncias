@@ -33,10 +33,7 @@ def obteniendo(request):
 
 
 def mapa(request):
-    if request.user.is_superuser:
-        return redirect(reverse('panel_admin'))  # Redirige a la URL de administración
-    else:
-        return render(request, 'website/mapa.html')
+    return render(request, 'website/mapa.html')
 
 
 def registar(request):
@@ -168,7 +165,7 @@ def base_admin_denuncia(request):
 def base_admin_usuario(request):
     usuarios = User.objects.all()
     form = RegistroDeUsuario()
-
+    no_puede = False
     if request.method == "POST":
         if "ver" in request.POST:
             print("ver")
@@ -187,7 +184,11 @@ def base_admin_usuario(request):
         elif "eliminar" in request.POST:
             print("eliminar")
             usuario = get_object_or_404(User, id=request.POST.get("id"))
-            usuario.delete()
+            if usuario == request.user:
+                print("Este es el usuario, no puede eliminarse así mismo")
+                no_puede=True
+            else:
+                usuario.delete()
 
     user_json = []
     for user_d in usuarios:
@@ -207,27 +208,11 @@ def base_admin_usuario(request):
         "usuarios": usuarios,
         "lista_user": user_json,
         "form": form,
+        "no_puede": no_puede,
     }
     return render(request, 'website/lista_user.html', context)
 
-"""
-def base_admin_usuario(request):
-    usermember = User.objects.all()
-    user_json = []
-    for user_d in usermember:
-        user_data = {
-            "id": user_d.id,
-            "username": user_d.username,
-            "nombre": user_d.first_name,
-            "apellido": user_d.last_name,
-            "activo": user_d.is_staff,
-            "email": user_d.email,
-            "union": user_d.date_joined,
-            "sesion": user_d.last_login,
-        }
-        user_json.append(user_data)
-    return render(request, 'website/lista_user.html', {"lista_user":user_json})
-"""
+
 
 
 def login_web(request):
@@ -240,7 +225,7 @@ def login_web(request):
             )
             if user is not None:
                 login(request, user)
-                if request.user.is_superuser:
+                if request.user.is_staff:
                     return redirect(reverse('panel_admin'))
                 else:
                     return redirect(reverse('mapa'))

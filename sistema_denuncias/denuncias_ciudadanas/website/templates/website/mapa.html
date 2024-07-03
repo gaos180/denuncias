@@ -11,13 +11,16 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
 
     <script>
+        let map;
+        let markers = [];
+    
         function initMap(data) {
             var mapOptions = {
                 center: { lat: -35.405338287353516, lng: -71.6393814086914 },
                 zoom: 14
             };
-            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    
             // Add user geolocation
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -27,7 +30,7 @@
                             lng: position.coords.longitude
                         };
                         map.setCenter(userLocation);
-
+    
                         var userMarker = new google.maps.Marker({
                             position: userLocation,
                             map: map,
@@ -49,7 +52,13 @@
             } else {
                 handleLocationError(false, map.getCenter());
             }
-
+    
+            addMarkers(data);
+        }
+    
+        function addMarkers(data) {
+            clearMarkers();
+    
             for (const denuncia of data) {
                 let markerColor;
                 switch (denuncia.causa) {
@@ -65,22 +74,33 @@
                     default:
                         markerColor = 'blue';
                 }
-
+    
                 let markerPath;
                 switch (denuncia.estado) {
+                    {% if request.user.is_staff %}
                     case 0:
                         markerPath = google.maps.SymbolPath.CIRCLE;
                         break;
+                    {% else %}
+                    case 0:
+                        markerPath = google.maps.SymbolPath.CIRCLE;
+                        break;
+                    {% endif %}
                     case 1:
+                    google.maps.SymbolPath.CIRCLE
                         markerPath = google.maps.SymbolPath.FORWARD_OPEN_ARROW;
                         break;
                     case 2:
                         markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
                         break;
-                    default:
+                    case 3:
                         markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
-                }
+                        break;
+                    case 4:
+                        markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+                        break;
 
+                }
                 const marker = new google.maps.Marker({
                     position: { lat: denuncia.latitude, lng: denuncia.longitude },
                     map: map,
@@ -94,13 +114,47 @@
                         scale: 5
                     }
                 });
-
+        
                 marker.addListener('click', function() {
                     showMoreInfo(denuncia);
                 });
+        
+                markers.push(marker);
             }
         }
-
+        
+    
+        function clearMarkers() {
+            for (let marker of markers) {
+                marker.setMap(null);
+            }
+            markers = [];
+        }
+    
+        function filterMapByCausa(causa) {
+            fetch('/api/denuncias/')
+                .then(response => response.json())
+                .then(data => {
+                    if (causa === 'all') {
+                        addMarkers(data);
+                    } else {
+                        const filteredData = data.filter(denuncia => denuncia.causa === causa);
+                        addMarkers(filteredData);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
+        function filterMapByEstado(estado) {
+            fetch('/api/denuncias/')
+                .then(response => response.json())
+                .then(data => {
+                    const filteredData = data.filter(denuncia => denuncia.estado === estado);
+                    addMarkers(filteredData);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    
         function handleLocationError(browserHasGeolocation, pos) {
             var infoWindow = new google.maps.InfoWindow({
                 content: browserHasGeolocation
@@ -110,18 +164,18 @@
             });
             infoWindow.open(map);
         }
-
+    
         function showMoreInfo(denuncia) {
             var modal = document.getElementById("denunciaModal");
             var titleElement = document.getElementById("denunciaTitle");
             titleElement.textContent = denuncia.titulo;
-
+    
             var descriptionElement = document.getElementById("denunciaDescription");
             descriptionElement.textContent = "Causa: " + denuncia.causa + " | Asunto: " + denuncia.asunto;
-
+    
             modal.style.display = "block";
         }
-
+    
         document.addEventListener('DOMContentLoaded', function() {
             fetch('/api/denuncias/')
                 .then(response => response.json())
@@ -129,13 +183,13 @@
                     initMap(data);
                 })
                 .catch(error => console.error('Error:', error));
-
+    
             var closeButton = document.getElementsByClassName("close")[0];
             closeButton.addEventListener("click", function() {
                 var modal = document.getElementById("denunciaModal");
                 modal.style.display = "none";
             });
-
+    
             window.addEventListener("click", function(event) {
                 var modal = document.getElementById("denunciaModal");
                 if (event.target == modal) {
@@ -148,6 +202,7 @@
             });
         });
     </script>
+    
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load bootstrap5 %}
@@ -194,7 +249,7 @@
           </form>
         </li>
       </ul>
-          {% if request.user.is_superuser %}
+          {% if request.user.is_staff %}
               <a class="nav-link text-light">Cuenta administrador</a>
               <a href="{% url 'panel_admin' %}" class="nav-link text-light btn-primary", style="background-color: green;"> Administración</a>
           {% endif %}
@@ -215,6 +270,22 @@
 
     {% block content %}
     <div class="container-fluid">
+        <div>
+            <button class="btn" onclick="filterMapByCausa('all')">Mostrar Todos</button>
+            <button class="btn" onclick="filterMapByCausa('Lugar de explotación')">Lugar de explotación</button>
+            <button class="btn" onclick="filterMapByCausa('Uso y/o contaminación de recursos naturales')">Uso y/o contaminación de recursos naturales</button>
+            <button class="btn" onclick="filterMapByCausa('Residuos, emisiones e inmisiones')">Residuos, emisiones e inmisiones</button>
+        </div>
+        <div>
+            {% if request.user.is_staff %}
+            <button class="btn" onclick="filterMapByEstado(0)">En revisión</button>
+            <button class="btn" onclick="filterMapByEstado(3)">Rechazada</button>
+            <button class="btn" onclick="filterMapByEstado(4)">Deshabilitada</button>
+            {% endif %}
+            <button class="btn" onclick="filterMapByEstado(1)">En procedimiento</button>
+            <button class="btn" onclick="filterMapByEstado(2)">Finalizada</button>
+            
+        </div>
         <div class="row">
             <div class="col-md-2">
                 <div class="card">
@@ -230,7 +301,7 @@
                                 <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_fore_open.png"> Estado: En procedimiento
                             </li>
                             <li class="list-group-item">
-                                <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_back_close.png"> Estado: Resuelto
+                                <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_back_close.png"> Estado: Finalizada
                             </li>
                             <li class="list-group-item">
                                 <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAADICAMAAAA9W+hXAAAAA1BMVEX6Ly+m5M7oAAAANElEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAN1+AABVhDU2QAAAABJRU5ErkJggg==" style="width: 24px;height: 24px ; border-radius:9999px;">
@@ -268,6 +339,7 @@
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
     {% endblock content %}
