@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 #from django.contrib.auth.decorators import login_required
 from .forms import RegistroDeUsuario
+from django.db.models import Q
 
 
 def obteniendo(request):
@@ -125,12 +126,48 @@ def administracion(request):
 def base_admin(request):
     return render(request, 'website/baseadmin.html')
 
+categorias = [
+    [0, "Lugar de explotación"],
+    [1, "Uso y/o contaminación de recursos naturales"],
+    [2, "Residuos, emisiones e inmisiones"]
+]
 
+estados = [
+    [0, "En revisión"],
+    [1, "En procedimiento"],
+    [2, "Finalizada"],
+    [3, "Rechazada"],
+    [4, "Deshabilitada"]
+]
 
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
     form = RegistroDeDenuncia()
+
+    causa = request.GET.get('causa')
+    fecha_suceso = request.GET.get('fecha_suceso')
+    hora_suceso = request.GET.get('hora_suceso')
+    fecha_envio = request.GET.get('fecha_envio')
+    estado = request.GET.get('estado')
+    query = request.GET.get('query')
+
+    if causa:
+        registro = registro.filter(causa=causa)
+    if fecha_suceso:
+        registro = registro.filter(fecha_suceso=fecha_suceso)
+    if hora_suceso:
+        registro = registro.filter(hora_suceso=hora_suceso)
+    if fecha_envio:
+        registro = registro.filter(fecha_envio__date=fecha_envio)
+    if estado:
+        registro = registro.filter(estado=estado)
+    if query:
+        registro = registro.filter(
+            Q(titulo__icontains=query) |
+            Q(asunto__icontains=query) |
+            Q(username__username__icontains=query)
+        )
 
     if request.method == "POST":
         if "ver" in request.POST:
@@ -156,15 +193,34 @@ def base_admin_denuncia(request):
             denuncia.delete()
 
     context = {
-        'denuncias': registro,
-        'usuarios': usuarios,
-        'form': form,
-    }
+            'denuncias': registro,
+            'usuarios': usuarios,
+            'form': form,
+            'estados': estados,
+            'categorias': categorias,
+        }
     return render(request, 'website/lista.html', context)
 
 def base_admin_usuario(request):
-    usuarios = User.objects.all()
     form = RegistroDeUsuario()
+    usuarios = User.objects.all()
+
+    is_staff = request.GET.get('is_staff')
+    query = request.GET.get('query')
+
+    if is_staff:
+        if is_staff.lower() == 'true':
+            usuarios = usuarios.filter(is_staff=True)
+        elif is_staff.lower() == 'false':
+            usuarios = usuarios.filter(is_staff=False)
+
+    if query:
+        usuarios = usuarios.filter(
+            Q(username__icontains=query) |
+            Q(first_name__icontains=query) |
+            Q(last_name__icontains=query) |
+            Q(email__icontains=query)
+        )
     no_puede = False
     if request.method == "POST":
         if "ver" in request.POST:
