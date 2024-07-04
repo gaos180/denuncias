@@ -8,7 +8,6 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <link href='//cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css' rel='stylesheet'>
     <style>
-
       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
 *{
   margin: 0;
@@ -138,7 +137,6 @@
 .sidebar li.profile a i{
   transition: all ease;
 }
-
 .sidebar li.profile:hover,
 .sidebar li.profile a:hover,
 .sidebar li.profile a:hover .links_name,
@@ -208,7 +206,6 @@
   left: 78px;
   width: calc(100% - 78px);
   transition: all 0.5s ease;
-
 }
 .sidebar.open ~ .home-section{
   left: 250px;
@@ -247,7 +244,6 @@
     text-overflow: ellipsis;
     white-space: initial;
   } 
-
   .table th{
     font-size: 1.5rem;
   }
@@ -256,12 +252,10 @@
             justify-content: center;
             align-items: center;
         }
-        
   img:hover {
         transform: scale(5); /* Amplía la imagen al 150% */
         border-radius: 30px;
     }
-
     </style>
     {% load bootstrap5 %}
     {% bootstrap_css %}
@@ -279,44 +273,41 @@
           <i class='bx bx-grid-alt'></i>
           <span class="links_name">Registro Denuncias</span>
         </a>
-         <span class="tooltip">Denuncias</span>
+          <span class="tooltip">Denuncias</span>
       </li>
       <li>
-       <a href="#">
-         <i class='bx bx-user' ></i>
-         <span class="links_name">Imagenes</span>
-       </a>
-       <span class="tooltip">Imagenes</span>
-     </li>
-     <li>
-       <a href="{% url 'panel_admin_user' %}">
-         <i class='bx bx-chat' ></i>
-         <span class="links_name">Usuarios</span>
-       </a>
-       <span class="tooltip">Usuarios</span>
-     </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-cart-alt' ></i>
-         <span class="links_name">Estados</span>
-       </a>
-       <span class="tooltip">Estatus</span>
-     </li>
-     <li class="profile">
+        <a href="#">
+          <i class='bx bx-user' ></i>
+          <span class="links_name">Imagenes</span>
+        </a>
+        <span class="tooltip">Imagenes</span>
+      </li>
+      <li>
+        <a href="{% url 'panel_admin_user' %}">
+          <i class='bx bx-chat' ></i>
+          <span class="links_name">Usuarios</span>
+        </a>
+        <span class="tooltip">Usuarios</span>
+      </li>
+      <li>
+        <a href="#">
+          <i class='bx bx-cart-alt' ></i>
+          <span class="links_name">Estados</span>
+        </a>
+        <span class="tooltip">Estatus</span>
+      </li>
+      <li class="profile">
         <a href="#">
           <i class='bx bx-log-out' id="log_out" ></i>
           <span class="links_name p-2">Cerrar Sesion</span>
         </a>
-     </li>
+      </li>
     </ul>
   </div>
   <section class="home-section p-5">
-    
       {% block content %}
-        
       {% endblock content %}
   </section>
-
   <script>
     let sidebar = document.querySelector(".sidebar");
     let closeBtn = document.querySelector("#btn");
@@ -324,7 +315,6 @@
       sidebar.classList.toggle("open");
       menuBtnChange();//calling the function(optional)
     });
-
     function menuBtnChange() {
       if(sidebar.classList.contains("open")){
         closeBtn.classList.replace("bx-menu", "bx-menu-alt-right");//replacing the iocns class
@@ -334,7 +324,6 @@
     }
   </script>
   <script src="//cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-
 </body>
   {% bootstrap_javascript %}
 </html>
