@@ -313,29 +313,59 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h2> Header denuncias</h2>
-                            <span class="close btn-close"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            
-                            {% csrf_token %}
-                            {% for denuncia in denuncias %}
-                                {% if denuncia.username == user %}
-                                <p> Denuncia {{denuncia.titulo}} tiene el estado de  
-                                    {% if denuncia.estado == 0 %}
-                                    estar en revision
-                                    {% elif denuncia.estado == 1 %}
-                                    estar en procedimiento
-                                    {% elif denuncia.estado == 2 %}
-                                    estar finalizada
-                                    {% elif denuncia.estado == 3 %}
-                                    estar rechazada
-                                    {% elif denuncia.estado == 4 %}
-                                    estar deshabilitada o cancelada
-                                    {% endif %}
-                                    y es de la fecha: {{denuncia.fecha_suceso}} </p> 
-
-                                {% endif %}
-                            {% endfor %}
+                            <div class="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Titulo
+                                            </th>
+                                            <th>
+                                                Estado
+                                            </th>
+                                            <th>
+                                                Fecha
+                                            </th>    
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% csrf_token %}
+                                        {% for denuncia in denuncias %}
+                                            {% if denuncia.username == user %}
+                                            <tr>
+                                                <td style="max-width: 50vw;">
+                                                    Denuncia: {{denuncia.titulo}}
+                                                </td>
+                                                <td>
+                                                    {% if denuncia.estado == 0 %}
+                                                    En revision
+                                                    {% elif denuncia.estado == 1 %}
+                                                    En procedimiento
+                                                    {% elif denuncia.estado == 2 %}
+                                                    Finalizada
+                                                    {% elif denuncia.estado == 3 %}
+                                                    Rechazada
+                                                    {% elif denuncia.estado == 4 %}
+                                                    Deshabilitada o cancelada
+                                                {% endif %}
+    
+                                                </td>
+                                                <td>
+                                                    {{denuncia.fecha_suceso}}
+    
+                                                </td>
+                                                {% endif %}
+    
+                                            </tr>
+                                                
+            
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
