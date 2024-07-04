@@ -278,33 +278,18 @@
         </a>
          <span class="tooltip">Denuncias</span>
       </li>
-      <li>
-       <a href="#">
-         <i class='bx bx-user' ></i>
-         <span class="links_name">Imagenes</span>
-       </a>
-       <span class="tooltip">Imagenes</span>
-     </li>
      <li>
        <a href="{% url 'panel_admin_user' %}">
-         <i class='bx bx-chat' ></i>
+         <i class='bx bx-user' ></i>
          <span class="links_name">Usuarios</span>
        </a>
        <span class="tooltip">Usuarios</span>
      </li>
-     <li>
-       <a href="#">
-         <i class='bx bx-cart-alt' ></i>
-         <span class="links_name">Estados</span>
-       </a>
-       <span class="tooltip">Estatus</span>
-     </li>
      <li class="profile">
       <a href="#">
-
           <form method="post" action="{% url 'logout' %}" class="">
             {% csrf_token %}
-            <button type="submit" class="btn btn-light " style="border-radius: 8px; color: #212529; font-weight: 1000;"><i class='bx bx-log-out' id="log_out"></i>
+            <button type="submit" class="btn " style="border-radius: 8px; color: #212529; font-weight: 1000;"><i class='bx bx-log-out' id="log_out"></i>
             </button>
           </form>
           <span class="links_name p-2">Cerrar Sesion</span>

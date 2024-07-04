@@ -60,11 +60,11 @@
   <table class="mt-5 table table-hover table-responsive">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Titulo</th>
         <th>Username</th>
         <th>Imagen </th>
-        <th>Causa</th>
+        <th>Asunto</th>
+        <th>Categoria</th>
         <th>Estado</th>
         <th class="text-center">Acciones</th>
       </tr>
@@ -72,11 +72,11 @@
     <tbody>
       {% for denuncia in entity %}
         <tr class="overflow-wrap">
-          <td>{{denuncia.id}}</td>
           <td>{{denuncia.titulo}}</td>
           <td>{{denuncia.username}}</td>
           <td><img src="{{denuncia.imagen.url}}" alt="" style="max-width: 64px; max-height:64px;"></td>
-          <td class="overflow">{{denuncia.asunto}}</td>
+          <td style="max-width: 300px; ">{{denuncia.asunto}}</td>
+          <td>{{ denuncia.get_causa_display }}</td>
           <td>{{ denuncia.get_estado_display }}</td>
           <td>
             <div class="table-cell">

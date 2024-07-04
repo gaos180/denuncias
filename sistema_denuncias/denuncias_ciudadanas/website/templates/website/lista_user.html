@@ -19,7 +19,7 @@
   <div class="text-end pb-1">
     <a href="{% url 'registro_denuncia' %}" class="btn btn-outline-success" style="font-size: 1.3rem;">
       <i class='bx bx-add-to-queue'>
-        <span>Agregar Denuncia</span>
+        <span>Agregar Usuario</span>
       </i>
     </a>
   </div>
@@ -45,7 +45,6 @@
   <table class="mt-5 table table-hover table-responsive">
     <thead>
       <tr>
-        <th>ID</th>
         <th>Username</th>
         <th>Nombre</th>
         <th>Apellido </th>
@@ -59,7 +58,6 @@
     <tbody>
       {% for user_l in entity %}
         <tr class="overflow-wrap">
-          <td style="font-size: 1.2rem;">{{user_l.id|default:"-"}}</td>
           <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
           <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
           <td style="font-size: 1.2rem;">{{user_l.apellido|default:"-"}}</td>
@@ -215,7 +213,7 @@
     {% endfor %}
     </tbody>
   </table>
-  {% include "website/paginator.html" %}
+    {% include "website/paginator.html" %}
   </div>
   
 </div>
