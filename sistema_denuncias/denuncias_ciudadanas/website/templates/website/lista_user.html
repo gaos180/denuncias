@@ -70,7 +70,7 @@
               <td style="font-size: 2rem;color:red;"><i class='bx bxs-x-circle'></i></td>
           {% endif %}
           <td style="font-size: 1.5rem;">{{user_l.sesion|date:"d-m-Y h:i A"|default:"-"}}</td>
-          <td style="font-size: 1.5rem;">{{user_l.union|default:"d-m-Y h:i A"}}</td>
+          <td style="font-size: 1.5rem;">{{user_l.union|date:"d-m-Y h:i A"}}</td>
           <td>
             <div class="btn-group px-4">
               <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">

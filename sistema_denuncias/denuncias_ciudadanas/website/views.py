@@ -34,7 +34,12 @@ def obteniendo(request):
 
 
 def mapa(request):
-    return render(request, 'website/mapa.html')
+    registro = Denuncia.objects.all()
+    usuarios = User.objects.all()
+    context = {"denuncias": registro,
+               "usuarios": usuarios}
+
+    return render(request, 'website/mapa.html', context)
 
 
 def registar(request):
@@ -200,9 +205,9 @@ def base_admin_denuncia(request):
             'categorias': categorias,
         }
     return render(request, 'website/lista.html', context)
-
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
+    form_registro = UserRegisterForm()
     usuarios = User.objects.all()
 
     is_staff = request.GET.get('is_staff')
@@ -242,9 +247,15 @@ def base_admin_usuario(request):
             usuario = get_object_or_404(User, id=request.POST.get("id"))
             if usuario == request.user:
                 print("Este es el usuario, no puede eliminarse así mismo")
-                no_puede=True
+                no_puede = True
             else:
                 usuario.delete()
+        elif "crear" in request.POST:
+            form_registro = UserRegisterForm(request.POST)
+            if form_registro.is_valid():
+                form_registro.save()
+            else:
+                print("Errores del formulario de registro:", form_registro.errors)
 
     user_json = []
     for user_d in usuarios:
@@ -264,11 +275,10 @@ def base_admin_usuario(request):
         "usuarios": usuarios,
         "lista_user": user_json,
         "form": form,
+        "form_registro": form_registro,
         "no_puede": no_puede,
     }
     return render(request, 'website/lista_user.html', context)
-
-
 
 
 def login_web(request):
