@@ -142,6 +142,21 @@ estados = [
         [3, "Rechazada"],
         [4, "Deshabilitada"]
     ]
+def base_admin(request):
+    return render(request, 'website/baseadmin.html')
+
+categorias = [
+        [0, "Lugar de explotación"],
+        [1, "Uso y/o contaminación de recursos naturales"],
+        [2, "Residuos, emisiones e inmisiones"]
+    ]
+estados = [
+        [0, "En revisión"],
+        [1, "En procedimiento"],
+        [2, "Finalizada"],
+        [3, "Rechazada"],
+        [4, "Deshabilitada"]
+    ]
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
@@ -152,6 +167,7 @@ def base_admin_denuncia(request):
     fecha_envio = request.GET.get('fecha_envio')
     estado = request.GET.get('estado')
     query = request.GET.get('query')
+
 
     # Apply filters before pagination
     if causa:
@@ -173,7 +189,7 @@ def base_admin_denuncia(request):
 
     # Pagination after filtering
     page_ = request.GET.get('page', 1)
-    paginator = Paginator(registro, 10)
+    paginator = Paginator(registro, 5)
     try:
         registro = paginator.page(page_)
     except:
@@ -212,7 +228,6 @@ def base_admin_denuncia(request):
         'categorias': categorias,
     }
     return render(request, 'website/lista.html', context)
-
 
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
@@ -271,7 +286,7 @@ def base_admin_usuario(request):
 
     page_2 = request.GET.get('page',1)
     try:    
-        paginator = Paginator(usuarios, 10)
+        paginator = Paginator(usuarios, 2)
         usuarios = paginator.page(page_2)
     except: 
         raise Http404
