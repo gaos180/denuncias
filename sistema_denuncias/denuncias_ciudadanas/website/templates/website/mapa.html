@@ -2,11 +2,21 @@
 <html>
 <head>
     <title>Mapa</title>
+    {% if request.user.is_authenticated %}
+    <style>
+        #map {
+            height: 80vh;
+        }
+    </style>
+    {% else %}
     <style>
         #map {
             height: 85vh;
         }
     </style>
+        
+    {% endif %}
+
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
 
@@ -290,12 +300,54 @@
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtroModal">
                         Ver Filtros
                     </button>
+                    {% if request.user.is_authenticated %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#denunciasUsuarios">
+                        Ver Denuncias
+                    </button>     
+                    {% endif %}
                 </div>
+
+            <!--Modal denuncias usuario-->
+            <div id="denunciasUsuarios" class="modal" tabindex="-1" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2> Header denuncias</h2>
+                            <span class="close btn-close"></span>
+                        </div>
+                        <div class="modal-body">
+                            
+                            {% csrf_token %}
+                            {% for denuncia in denuncias %}
+                                {% if denuncia.username == user %}
+                                <p> Denuncia {{denuncia.titulo}} tiene el estado de  
+                                    {% if denuncia.estado == 0 %}
+                                    estar en revision
+                                    {% elif denuncia.estado == 1 %}
+                                    estar en procedimiento
+                                    {% elif denuncia.estado == 2 %}
+                                    estar finalizada
+                                    {% elif denuncia.estado == 3 %}
+                                    estar rechazada
+                                    {% elif denuncia.estado == 4 %}
+                                    estar deshabilitada o cancelada
+                                    {% endif %}
+                                    y es de la fecha: {{denuncia.fecha_suceso}} </p> 
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          </div>                    
+                    </div>
+                </div>
+            </div>
 
             <div class="">
                 <div id="map" class="card"></div>
             </div>
-            
+            <!--Modal Denuncia especifica-->
             <div id="denunciaModal" class="modal" tabindex="-1" aria-hidden="false">
                 <div class="modal-dialog">
                     <div class="modal-content">

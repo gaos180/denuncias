@@ -294,14 +294,15 @@
        <span class="tooltip">Estatus</span>
      </li>
      <li class="profile">
-      <form method="post" action="{% url 'logout' %}" class="">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-light " style="border-radius: 8px; color: #212529; font-weight: 1000;"><i class='bx bx-log-out' id="log_out"></i>
-        </button>
-      </form>
-        <a href="#">
+      <a href="#">
+
+          <form method="post" action="{% url 'logout' %}" class="">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-light " style="border-radius: 8px; color: #212529; font-weight: 1000;"><i class='bx bx-log-out' id="log_out"></i>
+            </button>
+          </form>
           <span class="links_name p-2">Cerrar Sesion</span>
-        </a>
+      </a>
      </li>
     </ul>
   </div>
