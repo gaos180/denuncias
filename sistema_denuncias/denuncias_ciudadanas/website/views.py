@@ -13,7 +13,6 @@ from django.contrib.auth import get_user_model
 #from django.contrib.auth.decorators import login_required
 from .forms import RegistroDeUsuario
 
-
 def obteniendo(request):
     denuncias = Denuncia.objects.all()
     denuncias_json = []
@@ -22,7 +21,8 @@ def obteniendo(request):
             "titulo": denuncia.titulo,
             "causa": denuncia.get_causa_display(),
             "asunto": denuncia.asunto,
-            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            "imagen": denuncia.imagen.url ,
+            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),# Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
             "estado": denuncia.estado,
@@ -126,7 +126,6 @@ def base_admin(request):
     return render(request, 'website/baseadmin.html')
 
 
-
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
@@ -152,7 +151,8 @@ def base_admin_denuncia(request):
                 print("Errores del formulario:", form.errors)
         elif "eliminar" in request.POST:
             print("eliminar")
-            denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+            denuncia_id = request.POST.get("id")
+            denuncia = get_object_or_404(Denuncia, id=denuncia_id)
             denuncia.delete()
 
     context = {

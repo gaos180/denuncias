@@ -4,7 +4,14 @@
 {% block content %}
 
 
-
+{% if no_puede %}
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      <div>
+        No puedes borrarte a ti mismo
+      </div>
+    </div>
+    {% endif %}
 <div>
   <H1>Usuarios</H1>
   <hr style="border: 3px solid black; border-radius: 5px;">
@@ -179,17 +186,14 @@
       </div>
   </div>
 </div>
-    {% if no_puede %}
-    <span>
-      No te puedes borrar a ti mismo, al menos en esta página aquí
-    </span>
-    {% endif %}
+    
 
 
       {% endfor %}
     </tbody>
   </table>
   </div>
+  
 </div>
 {% endblock %}
 {% endif %}
