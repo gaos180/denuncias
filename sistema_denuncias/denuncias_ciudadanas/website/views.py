@@ -132,7 +132,13 @@ categorias = [
     [2, "Residuos, emisiones e inmisiones"]
 ]
 
-
+estados = [
+    [0, "En revisión"],
+    [1, "En procedimiento"],
+    [2, "Finalizada"],
+    [3, "Rechazada"],
+    [4, "Deshabilitada"]
+]
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
