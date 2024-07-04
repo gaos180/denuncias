@@ -1,3 +1,5 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Denuncia
 from django.contrib.auth import login, authenticate
@@ -10,9 +12,10 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-#from django.contrib.auth.decorators import login_required
 from .forms import RegistroDeUsuario
 from django.db.models import Q
+from django.core.paginator import Paginator
+from django.http import Http404
 
 def obteniendo(request):
     denuncias = Denuncia.objects.all()
@@ -29,7 +32,6 @@ def obteniendo(request):
             "estado": denuncia.estado,
         }
         denuncias_json.append(denuncia_data)
-
     return JsonResponse(denuncias_json, safe=False)
 
 
@@ -37,8 +39,8 @@ def mapa(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
     context = {"denuncias": registro,
-               "usuarios": usuarios}
-
+            "usuarios": usuarios
+            }
     return render(request, 'website/mapa.html', context)
 
 
@@ -53,7 +55,6 @@ def registar(request):
             user.set_password(form.cleaned_data['password1'])
             user.is_staff = False
             user.save()
-
             group = Group.objects.get(name='denunciantes')
             user.groups.add(group)
             return render(request, "website/mapa.html")
@@ -66,7 +67,6 @@ def registar(request):
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
-
     if request.method == 'POST':
         registro_denuncia = RegistroDeDenuncia(request.POST, request.FILES)
         if registro_denuncia.is_valid():
@@ -85,7 +85,6 @@ def registro_denuncia(request):
         else:
             #Se notifica error
             return redirect(reverse('registro_denuncia')+'?error')
-
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
 
@@ -132,23 +131,21 @@ def base_admin(request):
     return render(request, 'website/baseadmin.html')
 
 categorias = [
-    [0, "Lugar de explotación"],
-    [1, "Uso y/o contaminación de recursos naturales"],
-    [2, "Residuos, emisiones e inmisiones"]
-]
-
+        [0, "Lugar de explotación"],
+        [1, "Uso y/o contaminación de recursos naturales"],
+        [2, "Residuos, emisiones e inmisiones"]
+    ]
 estados = [
-    [0, "En revisión"],
-    [1, "En procedimiento"],
-    [2, "Finalizada"],
-    [3, "Rechazada"],
-    [4, "Deshabilitada"]
-]
+        [0, "En revisión"],
+        [1, "En procedimiento"],
+        [2, "Finalizada"],
+        [3, "Rechazada"],
+        [4, "Deshabilitada"]
+    ]
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
     usuarios = User.objects.all()
     form = RegistroDeDenuncia()
-
     causa = request.GET.get('causa')
     fecha_suceso = request.GET.get('fecha_suceso')
     hora_suceso = request.GET.get('hora_suceso')
@@ -156,6 +153,7 @@ def base_admin_denuncia(request):
     estado = request.GET.get('estado')
     query = request.GET.get('query')
 
+    # Apply filters before pagination
     if causa:
         registro = registro.filter(causa=causa)
     if fecha_suceso:
@@ -170,8 +168,16 @@ def base_admin_denuncia(request):
         registro = registro.filter(
             Q(titulo__icontains=query) |
             Q(asunto__icontains=query) |
-            Q(username__username__icontains=query)
+            Q(username_username_icontains=query)
         )
+
+    # Pagination after filtering
+    page_ = request.GET.get('page', 1)
+    paginator = Paginator(registro, 10)
+    try:
+        registro = paginator.page(page_)
+    except:
+        raise Http404
 
     if request.method == "POST":
         if "ver" in request.POST:
@@ -198,18 +204,18 @@ def base_admin_denuncia(request):
             denuncia.delete()
 
     context = {
-            'denuncias': registro,
-            'usuarios': usuarios,
-            'form': form,
-            'estados': estados,
-            'categorias': categorias,
-        }
+        'entity': registro,
+        "paginator": paginator,
+        'usuarios': usuarios,
+        'form': form,
+        'estados': estados,
+        'categorias': categorias,
+    }
     return render(request, 'website/lista.html', context)
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
     form_registro = UserRegisterForm()
     usuarios = User.objects.all()
-
     is_staff = request.GET.get('is_staff')
     query = request.GET.get('query')
 
@@ -235,6 +241,7 @@ def base_admin_usuario(request):
             form = RegistroDeUsuario(request.POST)
             if form.is_valid():
                 usuario = get_object_or_404(User, id=request.POST.get("id"))
+                print(usuario.username)
                 usuario.first_name = form.cleaned_data["first_name"]
                 usuario.last_name = form.cleaned_data["last_name"]
                 usuario.email = form.cleaned_data["email"]
@@ -257,6 +264,13 @@ def base_admin_usuario(request):
             else:
                 print("Errores del formulario de registro:", form_registro.errors)
 
+
+    page_2 = request.GET.get('page',1)
+    try:    
+        paginator = Paginator(usuarios, 10)
+        usuarios = paginator.page(page_2)
+    except: 
+        raise Http404
     user_json = []
     for user_d in usuarios:
         user_data = {
@@ -273,12 +287,16 @@ def base_admin_usuario(request):
 
     context = {
         "usuarios": usuarios,
-        "lista_user": user_json,
+        "paginator":paginator,
+        "entity": user_json,
         "form": form,
         "form_registro": form_registro,
         "no_puede": no_puede,
     }
     return render(request, 'website/lista_user.html', context)
+
+
+
 
 
 def login_web(request):
@@ -298,7 +316,6 @@ def login_web(request):
     else:
         form = AuthenticationForm()
     return render(request, 'website/login_1.html', {"form": form})
-
 
 
 def terminos_y_condiciones(request):

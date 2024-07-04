@@ -56,7 +56,7 @@
     </div>
 </form>
 
-  <div class="container_2 px-5">
+  <div class=" px-5">
   <table class="mt-5 table table-hover table-responsive">
     <thead>
       <tr>
@@ -70,7 +70,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for denuncia in denuncias %}
+      {% for denuncia in entity %}
         <tr class="overflow-wrap">
           <td>{{denuncia.id}}</td>
           <td>{{denuncia.titulo}}</td>
@@ -79,16 +79,18 @@
           <td class="overflow">{{denuncia.asunto}}</td>
           <td>{{ denuncia.get_estado_display }}</td>
           <td>
-            <div class="btn-group px-4">
-                <button type="button" class="btn btn-primary button-edit btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ denuncia.id }}" name="editar">
-                  <i class='bx bx-edit-alt' ></i>
-              </button>
-              <button type="button" class="btn text-white" style="background-color:black;" data-bs-toggle="modal" data-bs-target="#modal-ver{{ denuncia.id }}" name="ver">
-                <i class='bx bxs-show' ></i>
-              </button>
-              <button type="button" class="btn text-white" style="background-color:purple;" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ denuncia.id }}">
-                <i class='bx bx-trash' ></i>
-              </button>
+            <div class="table-cell">
+              <div class="btn-group px-4">
+                  <button type="button" class="btn btn-primary button-edit btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ denuncia.id }}" name="editar">
+                    <i class='bx bx-edit-alt' ></i>
+                </button>
+                <button type="button" class="btn text-white" style="background-color:black;" data-bs-toggle="modal" data-bs-target="#modal-ver{{ denuncia.id }}" name="ver">
+                  <i class='bx bxs-show' ></i>
+                </button>
+                <button type="button" class="btn text-white" style="background-color:purple;" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ denuncia.id }}">
+                  <i class='bx bx-trash' ></i>
+                </button>
+              </div>
             </div>
           </td>
         </tr>
@@ -257,6 +259,7 @@
       {% endfor %}
     </tbody>
   </table>
+    {% include "website/paginator.html" %}
   </div>
 </div>
 
