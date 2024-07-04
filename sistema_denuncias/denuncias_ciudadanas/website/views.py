@@ -212,6 +212,8 @@ def base_admin_denuncia(request):
         'categorias': categorias,
     }
     return render(request, 'website/lista.html', context)
+
+
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
     form_registro = UserRegisterForm()
@@ -232,6 +234,7 @@ def base_admin_usuario(request):
             Q(last_name__icontains=query) |
             Q(email__icontains=query)
         )
+
     no_puede = False
     if request.method == "POST":
         if "ver" in request.POST:
@@ -258,6 +261,7 @@ def base_admin_usuario(request):
             else:
                 usuario.delete()
         elif "crear" in request.POST:
+            print("entra a crear")
             form_registro = UserRegisterForm(request.POST)
             if form_registro.is_valid():
                 form_registro.save()
