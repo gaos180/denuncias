@@ -17,7 +17,6 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import Http404
 
-
 def obteniendo(request):
     denuncias = Denuncia.objects.all()
     denuncias_json = []
@@ -26,7 +25,8 @@ def obteniendo(request):
             "titulo": denuncia.titulo,
             "causa": denuncia.get_causa_display(),
             "asunto": denuncia.asunto,
-            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),  # Formatea la fecha
+            "imagen": denuncia.imagen.url ,
+            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),# Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
             "estado": denuncia.estado,
@@ -36,7 +36,12 @@ def obteniendo(request):
 
 
 def mapa(request):
-    return render(request, 'website/mapa.html')
+    registro = Denuncia.objects.all()
+    usuarios = User.objects.all()
+    context = {"denuncias": registro,
+            "usuarios": usuarios
+            }
+    return render(request, 'website/mapa.html', context)
 
 
 def registar(request):
@@ -168,7 +173,7 @@ def base_admin_denuncia(request):
 
     # Pagination after filtering
     page_ = request.GET.get('page', 1)
-    paginator = Paginator(registro, 4)
+    paginator = Paginator(registro, 10)
     try:
         registro = paginator.page(page_)
     except:
@@ -194,7 +199,8 @@ def base_admin_denuncia(request):
                 print("Errores del formulario:", form.errors)
         elif "eliminar" in request.POST:
             print("eliminar")
-            denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
+            denuncia_id = request.POST.get("id")
+            denuncia = get_object_or_404(Denuncia, id=denuncia_id)
             denuncia.delete()
 
     context = {
@@ -206,9 +212,9 @@ def base_admin_denuncia(request):
         'categorias': categorias,
     }
     return render(request, 'website/lista.html', context)
-
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
+    form_registro = UserRegisterForm()
     usuarios = User.objects.all()
     is_staff = request.GET.get('is_staff')
     query = request.GET.get('query')
@@ -248,14 +254,20 @@ def base_admin_usuario(request):
             usuario = get_object_or_404(User, id=request.POST.get("id"))
             if usuario == request.user:
                 print("Este es el usuario, no puede eliminarse así mismo")
-                no_puede=True
+                no_puede = True
             else:
                 usuario.delete()
+        elif "crear" in request.POST:
+            form_registro = UserRegisterForm(request.POST)
+            if form_registro.is_valid():
+                form_registro.save()
+            else:
+                print("Errores del formulario de registro:", form_registro.errors)
 
 
     page_2 = request.GET.get('page',1)
     try:    
-        paginator = Paginator(usuarios, 4)
+        paginator = Paginator(usuarios, 10)
         usuarios = paginator.page(page_2)
     except: 
         raise Http404
@@ -278,6 +290,7 @@ def base_admin_usuario(request):
         "paginator":paginator,
         "entity": user_json,
         "form": form,
+        "form_registro": form_registro,
         "no_puede": no_puede,
     }
     return render(request, 'website/lista_user.html', context)

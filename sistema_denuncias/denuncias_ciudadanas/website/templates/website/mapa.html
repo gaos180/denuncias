@@ -2,11 +2,21 @@
 <html>
 <head>
     <title>Mapa</title>
+    {% if request.user.is_authenticated %}
     <style>
         #map {
-            height: 500px;
+            height: 80vh;
         }
     </style>
+    {% else %}
+    <style>
+        #map {
+            height: 85vh;
+        }
+    </style>
+        
+    {% endif %}
+
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAePnBZc6RcvZGWf0a9twNHbWDxSmln3Gg&callback=initMap" async defer></script>
 
@@ -171,6 +181,11 @@
             titleElement.textContent = denuncia.titulo;
     
             var descriptionElement = document.getElementById("denunciaDescription");
+            
+            var imagenURL = denuncia.imagen;
+            var descriptionImage = document.getElementById("denunciaImage");
+            descriptionImage.innerHTML = `<img src="${imagenURL}" style="max-width: 64px; max-height:64px;">`;
+
             descriptionElement.textContent = "Causa: " + denuncia.causa + " | Asunto: " + denuncia.asunto;
     
             modal.style.display = "block";
@@ -270,70 +285,82 @@
 
     {% block content %}
     <div class="container-fluid">
-        <div>
-            <button class="btn" onclick="filterMapByCausa('all')">Mostrar Todos</button>
-            <button class="btn" onclick="filterMapByCausa('Lugar de explotación')">Lugar de explotación</button>
-            <button class="btn" onclick="filterMapByCausa('Uso y/o contaminación de recursos naturales')">Uso y/o contaminación de recursos naturales</button>
-            <button class="btn" onclick="filterMapByCausa('Residuos, emisiones e inmisiones')">Residuos, emisiones e inmisiones</button>
-        </div>
-        <div>
-            {% if request.user.is_staff %}
-            <button class="btn" onclick="filterMapByEstado(0)">En revisión</button>
-            <button class="btn" onclick="filterMapByEstado(3)">Rechazada</button>
-            <button class="btn" onclick="filterMapByEstado(4)">Deshabilitada</button>
-            {% endif %}
-            <button class="btn" onclick="filterMapByEstado(1)">En procedimiento</button>
-            <button class="btn" onclick="filterMapByEstado(2)">Finalizada</button>
-            
-        </div>
+        
+
+
+
         <div class="row">
-            <div class="col-md-2">
-                <div class="card">
-                    <div class="card-header">
-                        <h2>Leyenda</h2>
-                    </div>
-                    <div class="card-body">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_circle.png"> Estado: En revisión
-                            </li>
-                            <li class="list-group-item">
-                                <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_fore_open.png"> Estado: En procedimiento
-                            </li>
-                            <li class="list-group-item">
-                                <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_back_close.png"> Estado: Finalizada
-                            </li>
-                            <li class="list-group-item">
-                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAADICAMAAAA9W+hXAAAAA1BMVEX6Ly+m5M7oAAAANElEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAN1+AABVhDU2QAAAABJRU5ErkJggg==" style="width: 24px;height: 24px ; border-radius:9999px;">
-                                Categoria: Lugar de explotación
-                            </li>
-                            <li class="list-group-item">
-                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPKZ1yt_IyVF1G4sFaUN1qf2Mp_tR-TUpBaw&s" style="width: 24px;height: 24px ; border-radius:9999px;">
-                                Categoria: Uso y/o contaminación de recursos naturales
-                            </li>
-                            <li class="list-group-item">
-                                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAGFBMVEUpYv/a18308u3q7v8AVP/p5+H+//8ARP8TtSxnAAABH0lEQVR4nO3PCQ2EABAAMX78Oz4IORGzaR10Wadb1nOb7HyG27XPdW3vcL+Pqe79Gx7LVIdhnmGfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYd9/eB9T3d/w2ue63uG5TXY+w+l+h1EihcbqknUAAAAASUVORK5CYII=" style="width: 24px;height: 24px ; border-radius:9999px;">
-                                Categoria: Residuos, emisiones e inmisiones
-                            </li>
-                        </ul>
+                <div class="card col md-1">
+                    <!-- Botón para abrir el modal de la leyenda -->
+                    <button type="button" class="btn text-light bg-dark" data-bs-toggle="modal" data-bs-target="#leyendaModal">
+                        Ver Leyenda
+                    </button>
+                    
+                    <!-- Botón para abrir el modal de los botones de filtro -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#filtroModal">
+                        Ver Filtros
+                    </button>
+                    {% if request.user.is_authenticated %}
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#denunciasUsuarios">
+                        Ver Denuncias
+                    </button>     
+                    {% endif %}
+                </div>
+
+            <!--Modal denuncias usuario-->
+            <div id="denunciasUsuarios" class="modal" tabindex="-1" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2> Header denuncias</h2>
+                            <span class="close btn-close"></span>
+                        </div>
+                        <div class="modal-body">
+                            
+                            {% csrf_token %}
+                            {% for denuncia in denuncias %}
+                                {% if denuncia.username == user %}
+                                <p> Denuncia {{denuncia.titulo}} tiene el estado de  
+                                    {% if denuncia.estado == 0 %}
+                                    estar en revision
+                                    {% elif denuncia.estado == 1 %}
+                                    estar en procedimiento
+                                    {% elif denuncia.estado == 2 %}
+                                    estar finalizada
+                                    {% elif denuncia.estado == 3 %}
+                                    estar rechazada
+                                    {% elif denuncia.estado == 4 %}
+                                    estar deshabilitada o cancelada
+                                    {% endif %}
+                                    y es de la fecha: {{denuncia.fecha_suceso}} </p> 
+
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                          </div>                    
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-7">
+            <div class="">
                 <div id="map" class="card"></div>
             </div>
-            <div id="denunciaModal" class="card col-md-3 modal" style="display: none;" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <!--Modal Denuncia especifica-->
+            <div id="denunciaModal" class="modal" tabindex="-1" aria-hidden="false">
                 <div class="modal-dialog">
-                    <div class="card-content">
-                        <div class="card-header">
+                    <div class="modal-content">
+                        <div class="modal-header">
                             <h2 id="denunciaTitle"></h2>
                             <span class="close btn-close"></span>
                         </div>
-                        <div class="card-body">
+                        <div class="modal-body">
                             <p id="denunciaDescription"></p>
+                            <img id="denunciaImage" src="" alt="imagen:" style="max-width: 64px; max-height:64px;">
+
                         </div>
-                        <div class="card-footer">
+                        <div class="modal-footer">
                             <button class="btn btn-primary" id="botonCerrar"> Close </button>
                         </div>
                     </div>
@@ -342,6 +369,85 @@
             
         </div>
     </div>
+
+<!-- Modal para Leyenda -->
+<div class="modal fade" id="leyendaModal" tabindex="-1" aria-labelledby="leyendaModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="leyendaModalLabel">Leyenda</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="leyenda">
+            <div class="card">
+                
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_circle.png"> Estado: En revisión
+                        </li>
+                        <li class="list-group-item">
+                            <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_fore_open.png"> Estado: En procedimiento
+                        </li>
+                        <li class="list-group-item">
+                            <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_back_close.png"> Estado: Finalizada
+                        </li>
+                        <li class="list-group-item">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAADICAMAAAA9W+hXAAAAA1BMVEX6Ly+m5M7oAAAANElEQVR4nO3BMQEAAADCoPVP7WsIoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAeAN1+AABVhDU2QAAAABJRU5ErkJggg==" style="width: 24px;height: 24px ; border-radius:9999px;">
+                            Categoria: Lugar de explotación
+                        </li>
+                        <li class="list-group-item">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPKZ1yt_IyVF1G4sFaUN1qf2Mp_tR-TUpBaw&s" style="width: 24px;height: 24px ; border-radius:9999px;">
+                            Categoria: Uso y/o contaminación de recursos naturales
+                        </li>
+                        <li class="list-group-item">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAGFBMVEUpYv/a18308u3q7v8AVP/p5+H+//8ARP8TtSxnAAABH0lEQVR4nO3PCQ2EABAAMX78Oz4IORGzaR10Wadb1nOb7HyG27XPdW3vcL+Pqe79Gx7LVIdhnmGfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYZ9hn2GfYd9/eB9T3d/w2ue63uG5TXY+w+l+h1EihcbqknUAAAAASUVORK5CYII=" style="width: 24px;height: 24px ; border-radius:9999px;">
+                            Categoria: Residuos, emisiones e inmisiones
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para Botones de Filtro -->
+<div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="filtroModalLabel">Filtros</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <button type="button" onclick="filterMapByCausa('all')"  class="btn btn-outline-info bg-dark">Mostrar Todos</button>
+          <button type="button" onclick="filterMapByCausa('Lugar de explotación')" class="btn btn-outline-info bg-dark">Lugar de explotación</button>
+          <button type="button" onclick="filterMapByCausa('Uso y/o contaminación de recursos naturales')" class="btn btn-outline-info bg-dark">Uso y/o contaminación de recursos naturales</button>
+          <button type="button" onclick="filterMapByCausa('Residuos, emisiones e inmisiones')" class="btn btn-outline-info bg-dark">Residuos, emisiones e inmisiones</button>
+          {% if request.user.is_staff %}
+          <button type="button" onclick="filterMapByEstado(0)" class="btn btn-outline-info bg-dark">En revisión</button>
+          <button type="button" onclick="filterMapByEstado(3)" class="btn btn-outline-info bg-dark">Rechazada</button>
+          <button type="button" onclick="filterMapByEstado(4)" class="btn btn-outline-info bg-dark">Deshabilitada</button>
+          {% endif %}
+          <button type="button" onclick="filterMapByEstado(1)" class="btn btn-outline-info bg-dark">En procedimiento</button>
+          <button type="button" onclick="filterMapByEstado(2)" class="btn btn-outline-info bg-dark">Finalizada</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
     {% endblock content %}
 </body>
 {% bootstrap_javascript %}

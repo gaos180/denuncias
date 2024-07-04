@@ -4,9 +4,18 @@
 {% block content %}
 
 
-
+{% if no_puede %}
+    <div class="alert alert-danger d-flex align-items-center" role="alert">
+      <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+      <div>
+        No puedes borrarte a ti mismo
+      </div>
+    </div>
+    {% endif %}
 <div style="display: flex; justify-content: space-between; align-items: center;">
-  <h1>Denuncias</h1>
+  <H1>Usuarios</H1>
+  <hr style="border: 3px solid black; border-radius: 5px;">
+
   <div class="text-end pb-1">
     <a href="{% url 'registro_denuncia' %}" class="btn btn-outline-success" style="font-size: 1.3rem;">
       <i class='bx bx-add-to-queue'>
@@ -208,6 +217,7 @@
   </table>
   {% include "website/paginator.html" %}
   </div>
+  
 </div>
 {% endblock %}
 {% endif %}
