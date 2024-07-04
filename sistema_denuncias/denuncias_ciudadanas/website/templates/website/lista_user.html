@@ -12,17 +12,36 @@
       </div>
     </div>
     {% endif %}
-<div>
+<div style="display: flex; justify-content: space-between; align-items: center;">
   <H1>Usuarios</H1>
   <hr style="border: 3px solid black; border-radius: 5px;">
+
   <div class="text-end pb-1">
-      <a href="" class="btn btn-outline-success" style="font-size: 1.3rem;">
-        <i class='bx bx-add-to-queue'>
-          <span>Agregar Usuario</span>
-        </i>
-      </a>
+    <a href="{% url 'registro_denuncia' %}" class="btn btn-outline-success" style="font-size: 1.3rem;">
+      <i class='bx bx-add-to-queue'>
+        <span>Agregar Denuncia</span>
+      </i>
+    </a>
   </div>
-  <div class="container_2 px-5">
+</div> 
+<hr style="border: 3px solid black; border-radius: 5px;">
+<form action="" method="GET" class="filter-form" style="display: flex; align-items: center; gap: 10px;">
+  <div class="form-group">
+      <label for="is_staff">Staff</label>
+      <select class="form-control" id="is_staff" name="is_staff">
+          <option value="">-- Staff --</option>
+          <option value="true" {% if request.GET.is_staff == "true" %}selected{% endif %}>Sí</option>
+          <option value="false" {% if request.GET.is_staff == "false" %}selected{% endif %}>No</option>
+      </select>
+  </div>
+  <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+    <div>
+        <label for="query">Buscar</label>
+        <input type="text" class="form-control" id="query" name="query" placeholder="Palabra clave" value="{{ request.GET.query }}">
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Buscar</button>
+</div>
+</form>
   <table class="mt-5 table table-hover table-responsive">
     <thead>
       <tr>

@@ -5,16 +5,57 @@
 <style>
 
 </style>
-<div>
-  <H1>Denuncias</H1>
-  <hr style="border: 3px solid black; border-radius: 5px;">
-  <div class="text-end pb-1">
+<div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>Denuncias</h1>
+    <div class="text-end pb-1">
       <a href="{% url 'registro_denuncia' %}" class="btn btn-outline-success" style="font-size: 1.3rem;">
         <i class='bx bx-add-to-queue'>
           <span>Agregar Denuncia</span>
         </i>
       </a>
-  </div>
+    </div>
+  </div>  
+  <hr style="border: 3px solid black; border-radius: 5px;">
+  <form action="" method="GET" class="filter-form" style="display: flex; align-items: center; gap: 10px;">
+    <div class="form-group">
+        <label for="causa">Categoria</label>
+        <select class="form-control" id="causa" name="causa">
+            <option value="">-- Seleccionar Causa --</option>
+            {% for id, name in categorias %}
+            <option value="{{ id }}" {% if request.GET.causa == id|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="fecha_suceso">Fecha de Suceso</label>
+        <input type="date" class="form-control" id="fecha_suceso" name="fecha_suceso" value="{{ request.GET.fecha_suceso }}">
+    </div>
+    <div class="form-group">
+        <label for="hora_suceso">Hora de Suceso</label>
+        <input type="time" class="form-control" id="hora_suceso" name="hora_suceso" value="{{ request.GET.hora_suceso }}">
+    </div>
+    <div class="form-group">
+        <label for="fecha_envio">Fecha de Envio</label>
+        <input type="date" class="form-control" id="fecha_envio" name="fecha_envio" value="{{ request.GET.fecha_envio }}">
+    </div>
+    <div class="form-group">
+        <label for="estado">Estado</label>
+        <select class="form-control" id="estado" name="estado">
+            <option value="">-- Seleccionar Estado --</option>
+            {% for id, name in estados %}
+            <option value="{{ id }}" {% if request.GET.estado == id|stringformat:"s" %}selected{% endif %}>{{ name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+        <div>
+            <label for="query">Buscar</label>
+            <input type="text" class="form-control" id="query" name="query" placeholder="Palabra clave" value="{{ request.GET.query }}">
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Buscar</button>
+    </div>
+</form>
+
   <div class="container_2 px-5">
   <table class="mt-5 table table-hover table-responsive">
     <thead>
