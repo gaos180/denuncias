@@ -232,7 +232,7 @@ def base_admin_denuncia(request):
 def base_admin_usuario(request):
     form = RegistroDeUsuario()
     form_registro = UserRegisterForm()
-    usuarios = User.objects.all()
+    usuarios = User.objects.all().order_by('id')
     is_staff = request.GET.get('is_staff')
     query = request.GET.get('query')
 
@@ -285,8 +285,8 @@ def base_admin_usuario(request):
 
 
     page_2 = request.GET.get('page',1)
+    paginator = Paginator(usuarios, 4)
     try:    
-        paginator = Paginator(usuarios, 2)
         usuarios = paginator.page(page_2)
     except: 
         raise Http404
