@@ -1,13 +1,13 @@
 {% extends "./mapa.html" %} {% load bootstrap5 %} {% block content %}
 <div class="container d-flex flex-wrap justify-content-center pt-5">
-  <div class="card w-50">
-    <div class="card-header bg-black text-white text-center rounded-lg">
-      <h1>Login</h1>
+  <div class="card login-card">
+    <div class="card-header card-header-login text-center rounded-lg">
+      <h1>Iniciar Sesión</h1>
     </div>
-    <div class="card-body">
+    <div class="card-body card-body-login">
       <form method="POST">
         {% csrf_token %} {% bootstrap_form form %}
-        <button type="submit" class="btn btn-primary">Iniciar sesión</button>
+        <button type="submit" class="btn btn-primary w-100 mt-3">Iniciar sesión</button>
       </form>
     </div>
   </div>
