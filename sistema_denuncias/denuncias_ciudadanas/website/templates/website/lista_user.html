@@ -81,34 +81,35 @@
     </thead>
     <tbody>
       {% for user_l in entity %}
-        <tr>
-          <td>{{ user_l.username|default:"-" }}</td>
-          <td>{{ user_l.nombre|default:"-" }}</td>
-          <td>{{ user_l.apellido|default:"-" }}</td>
-          <td>{{ user_l.email|default:"-" }}</td>
+        <tr class="overflow-wrap">
+          <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.apellido|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.email|default:"-"}}</td>
+          {% if user_l.activo %}
+              <td style="font-size: 2rem;color:green;"><i class='bx bxs-check-circle'></i></td>
+          {% else %}
+              <td style="font-size: 2rem;color:red;"><i class='bx bxs-x-circle'></i></td>
+          {% endif %}
+          <td style="font-size: 1.5rem;">{{user_l.sesion|date:"d-m-Y h:i A"|default:"-"}}</td>
+          <td style="font-size: 1.5rem;">{{user_l.union|date:"d-m-Y h:i A"|default:"-"}}</td>
           <td>
-            {% if user_l.activo %}
-              <i class='bx bxs-check-circle text-success'></i>
-            {% else %}
-              <i class='bx bxs-x-circle text-danger'></i>
-            {% endif %}
-          </td>
-          <td>{{ user_l.sesion|date:"d-m-Y h:i A"|default:"-" }}</td>
-          <td>{{ user_l.union|date:"d-m-Y h:i A"|default:"-" }}</td>
-          <td>
-            <div class="btn-group">
-              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
-                <i class='bx bx-edit-alt'></i>
-              </button>
-              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-ver{{ user_l.id }}" name="ver">
-                <i class='bx bxs-show'></i>
-              </button>
-              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ user_l.id }}">
-                <i class='bx bx-trash'></i>
-              </button>
+            <div class="table-cell">
+              <div class="btn-group px-4">
+                <button type="button" class="btn text-white btn-success"  data-bs-toggle="modal" data-bs-target="#modal-ver{{ user_l.id }}" name="ver">
+                  <i class='bx bxs-show'></i>
+                </button>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
+                  <i class='bx bx-edit-alt'></i>
+                </button>
+                <button type="button" class="btn text-white btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ user_l.id }}">
+                  <i class='bx bx-trash'></i>
+                </button>
+              </div>
             </div>
           </td>
         </tr>
+
 
         <!-- Modal Editar -->
         <div class="modal fade" id="modal-edit{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
