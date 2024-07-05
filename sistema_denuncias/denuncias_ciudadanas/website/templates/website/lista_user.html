@@ -1,8 +1,8 @@
 {% extends "./baseadmin.html" %}
 {% if request.user.is_staff %}
+{% load crispy_forms_tags %}
 
 {% block content %}
-
 
 {% if no_puede %}
     <div class="alert alert-danger d-flex align-items-center" role="alert">
@@ -11,19 +11,18 @@
         No puedes borrarte a ti mismo
       </div>
     </div>
-    {% endif %}
+{% endif %}
 <h1>Usuarios</h1>
 
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <hr style="border: 3px solid black; border-radius: 5px;">
-
+<div class="d-flex justify-content-between align-items-center flex-wrap">
+  <hr class="w-100" style="border: 3px solid black; border-radius: 5px;">
   
   <div class="text-end pb-1">
-  <button type="button" style="font-size: 1.3rem;" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#agregarDenuncia">
-    <i class='bx bx-add-to-queue'>
-      <span> Agregar Usuario </span>
-    </i>
-  </button>
+    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#agregarDenuncia">
+      <i class='bx bx-add-to-queue'>
+        <span> Agregar Usuario </span>
+      </i>
+    </button>
   </div>
 </div> 
 
@@ -36,76 +35,43 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="">
-          <form method="POST">
-            {% csrf_token %}
-            <!-- form_registro -->
-            <input type="hidden" name="id" value="">
-            
-            <div class="form-group">
-              <span class="input-group-text"></span>
-              <label for="id_username" class="input-group col-form-label">Username:</label>
-              {{ form_registro.username }}
-            </div>
-
-            <div class="form-group">
-              <label for="id_first_name" class="input-group col-form-label">Nombre:</label>
-              {{ form_registro.first_name }}
-            </div>
-            <div class="form-group">
-              <label for="id_last_name" class="input-group col-form-label">Apellido:</label>
-              {{ form_registro.last_name }}
-            </div>
-
-            <div class="form-group">
-              <label for="id_email" class="input-group col-form-label">Email:</label>
-              {{ form_registro.email }}
-            </div>
-            <div class="form-group">
-              <label for="id_password1" class="input-group col-form-label">Contraseña:</label>
-              {{ form_registro.password1 }}
-            </div>
-            <div class="form-group">
-              <label for="id_password2" class="input-group col-form-label">Confirme su contraseña:</label>
-              {{ form_registro.password2 }}
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button class="btn btn-outline-success" type="submit" name="crear">Guardar</button>
-            </div>
-          </form>
-        </div>
+        <form action="" method="POST">
+          {% csrf_token %}
+          {{ form_registro | crispy }}
+          <button type="submit" class="btn btn-primary" name="crear">Añadir</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </form>
       </div>
     </div>
   </div>
 </div>
 
-
-<hr style="border: 3px solid black; border-radius: 5px;">
-<form action="" method="GET" class="filter-form" style="display: flex; align-items: center; gap: 10px;">
+<hr class="w-100" style="border: 3px solid black; border-radius: 5px;">
+<form action="" method="GET" class="filter-form d-flex align-items-center flex-wrap gap-2">
   <div class="form-group">
-      <label for="is_staff">Staff</label>
-      <select class="form-control" id="is_staff" name="is_staff">
-          <option value="">-- Staff --</option>
-          <option value="true" {% if request.GET.is_staff == "true" %}selected{% endif %}>Sí</option>
-          <option value="false" {% if request.GET.is_staff == "false" %}selected{% endif %}>No</option>
-      </select>
+    <label for="is_staff">Staff</label>
+    <select class="form-control" id="is_staff" name="is_staff">
+      <option value="">-- Staff --</option>
+      <option value="true" {% if request.GET.is_staff == "true" %}selected{% endif %}>Sí</option>
+      <option value="false" {% if request.GET.is_staff == "false" %}selected{% endif %}>No</option>
+    </select>
   </div>
-  <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+  <div class="form-group d-flex align-items-center gap-2">
     <div>
-        <label for="query">Buscar</label>
-        <input type="text" class="form-control" id="query" name="query" placeholder="Palabra clave" value="{{ request.GET.query }}">
+      <label for="query">Buscar</label>
+      <input type="text" class="form-control" id="query" name="query" placeholder="Palabra clave" value="{{ request.GET.query }}">
     </div>
-    <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Buscar</button>
-</div>
+    <button type="submit" class="btn btn-primary mt-4">Buscar</button>
+  </div>
 </form>
+
 <div class="table-responsive">
-  <table class="mt-5 table table-hover table-responsive">
+  <table class="mt-5 table table-hover">
     <thead>
       <tr>
         <th>Username</th>
         <th>Nombre</th>
-        <th>Apellido </th>
+        <th>Apellido</th>
         <th>Email</th>
         <th>Staff</th>
         <th>Ultima Sesion</th>
@@ -115,31 +81,31 @@
     </thead>
     <tbody>
       {% for user_l in entity %}
-        <tr class="overflow-wrap">
-          <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
-          <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
-          <td style="font-size: 1.2rem;">{{user_l.apellido|default:"-"}}</td>
-          <td style="font-size: 1.2rem;">{{user_l.email|default:"-"}}</td>
-          {% if user_l.activo %}
-              <td style="font-size: 2rem;color:green;"><i class='bx bxs-check-circle'></i></td>
-          {% else %}
-              <td style="font-size: 2rem;color:red;"><i class='bx bxs-x-circle'></i></td>
-          {% endif %}
-          <td style="font-size: 1.5rem;">{{user_l.sesion|date:"d-m-Y h:i A"|default:"-"}}</td>
-          <td style="font-size: 1.5rem;">{{user_l.union|date:"d-m-Y h:i A"|default:"-"}}</td>
+        <tr>
+          <td>{{ user_l.username|default:"-" }}</td>
+          <td>{{ user_l.nombre|default:"-" }}</td>
+          <td>{{ user_l.apellido|default:"-" }}</td>
+          <td>{{ user_l.email|default:"-" }}</td>
           <td>
-            <div class="table-cell">
-              <div class="btn-group px-4">
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
-                  <i class='bx bx-edit-alt'></i>
-                </button>
-                <button type="button" class="btn text-white" style="background-color:black;" data-bs-toggle="modal" data-bs-target="#modal-ver{{ user_l.id }}" name="ver">
-                  <i class='bx bxs-show'></i>
-                </button>
-                <button type="button" class="btn text-white" style="background-color:purple;" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ user_l.id }}">
-                  <i class='bx bx-trash'></i>
-                </button>
-              </div>
+            {% if user_l.activo %}
+              <i class='bx bxs-check-circle text-success'></i>
+            {% else %}
+              <i class='bx bxs-x-circle text-danger'></i>
+            {% endif %}
+          </td>
+          <td>{{ user_l.sesion|date:"d-m-Y h:i A"|default:"-" }}</td>
+          <td>{{ user_l.union|date:"d-m-Y h:i A"|default:"-" }}</td>
+          <td>
+            <div class="btn-group">
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
+                <i class='bx bx-edit-alt'></i>
+              </button>
+              <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#modal-ver{{ user_l.id }}" name="ver">
+                <i class='bx bxs-show'></i>
+              </button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ user_l.id }}">
+                <i class='bx bx-trash'></i>
+              </button>
             </div>
           </td>
         </tr>
@@ -147,134 +113,105 @@
         <!-- Modal Editar -->
         <div class="modal fade" id="modal-edit{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
           <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Editar Usuario: {{ user_l.username }}</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <form method="POST">
-                          {% csrf_token %}
-                          <input type="hidden" name="id" value="{{ user_l.id }}">
-                          <div class="form-group">
-                              <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
-                              <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}">
-                          </div>
-                          <div class="form-group">
-                              <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
-                              <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}">
-                          </div>
-                          <div class="form-group">
-                              <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
-                              <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}">
-                          </div>
-                          <div class="form-group">
-                              <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
-                              <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %}>
-                          </div>
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                              <button class="btn btn-warning" type="submit" name="editar">Guardar</button>
-                          </div>
-                      </form>
-                  </div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Editar Usuario: {{ user_l.username }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              <div class="modal-body">
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ user_l.id }}">
+                  <div class="form-group">
+                    <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}">
+                  </div>
+                  <div class="form-group">
+                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
+                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %}>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-warning" type="submit" name="editar">Guardar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Modal Ver -->
         <div class="modal fade" id="modal-ver{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
           <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Ver Usuario: {{ user_l.username }}</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <form method="POST">
-                          {% csrf_token %}
-                          <input type="hidden" name="id" value="{{ user_l.id }}">
-                          <div class="form-group">
-                              <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
-                              <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}" readonly>
-                          </div>
-                          <div class="form-group">
-                              <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
-                              <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}" readonly>
-                          </div>
-                          <div class="form-group">
-                              <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
-                              <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}" readonly>
-                          </div>
-                          <div class="form-group">
-                              <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
-                              <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %} disabled>
-                          </div>
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                          </div>
-                      </form>
-                  </div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Ver Usuario: {{ user_l.username }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
+              <div class="modal-body">
+                <form method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ user_l.id }}">
+                  <div class="form-group">
+                    <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
+                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
+                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}" readonly>
+                  </div>
+                  <div class="form-group">
+                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
+                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %} disabled>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Modal Eliminar -->
         <div class="modal fade" id="modal-eliminar{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
           <div class="modal-dialog">
-              <div class="modal-content">
-                  <div class="modal-header">
-                      <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Eliminar Usuario: {{ user_l.username }}</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                      <form method="POST">
-                          {% csrf_token %}
-                          <input type="hidden" name="id" value="{{ user_l.id }}">
-                          <p>¿Estás seguro de que deseas eliminar a {{ user_l.username }}?</p>
-                          <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                              <button class="btn btn-danger" type="submit" name="eliminar">Eliminar</button>
-                          </div>
-                      </form>
-                  </div>
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Eliminar Usuario: {{ user_l.username }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-          </div>
-        </div>
-<!-- Modal No puede eliminar -->
-<div class="modal fade" id="modal-eliminar{{ user_l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ user_l.id }}" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h5 class="modal-title" id="modalLabel{{ user_l.id }}">Eliminar Usuario: {{ user_l.username }}</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <form method="POST">
+              <div class="modal-body">
+                <form method="POST">
                   {% csrf_token %}
                   <input type="hidden" name="id" value="{{ user_l.id }}">
                   <p>¿Estás seguro de que deseas eliminar a {{ user_l.username }}?</p>
                   <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                      <button class="btn btn-danger" type="submit" name="eliminar">Eliminar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button class="btn btn-danger" type="submit" name="eliminar">Eliminar</button>
                   </div>
-              </form>
+                </form>
+              </div>
+            </div>
           </div>
-      </div>
-  </div>
-</div>
-    {% if no_puede %}
-    <span>
-      No te puedes borrar a ti mismo, al menos en esta página aquí
-    </span>
-    {% endif %}
-    {% endfor %}
+        </div>
+
+      {% endfor %}
     </tbody>
   </table>
 </div>
-    {% include "website/paginator.html" %}
-  </div>
-  
-</div>
+{% include "website/paginator.html" %}
 {% endblock %}
 {% endif %}
