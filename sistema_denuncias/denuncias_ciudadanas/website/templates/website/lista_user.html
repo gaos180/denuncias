@@ -18,7 +18,9 @@
   <hr class="w-100" style="border: 3px solid black; border-radius: 5px;">
   
   <div class="text-end pb-1">
+
     <button type="button" class="btn btn-outline-success" style="font-size: 1.3rem;" data-bs-toggle="modal" data-bs-target="#agregarDenuncia">
+
       <i class='bx bx-add-to-queue'>
         <span> Agregar Usuario </span>
       </i>
@@ -52,6 +54,7 @@
     <label for="is_staff">Persona</label>
     <select class="form-control" id="is_staff" name="is_staff">
       <option value="">-- Personal --</option>
+
       <option value="true" {% if request.GET.is_staff == "true" %}selected{% endif %}>Sí</option>
       <option value="false" {% if request.GET.is_staff == "false" %}selected{% endif %}>No</option>
     </select>
@@ -138,6 +141,7 @@
                   <div class="form-group">
                     <label for="is_staff-{{ user_l.id }}" class="col-form-label">Personal:</label>
                     <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.is_staff %}checked{% endif %}>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -168,6 +172,7 @@
                   <div class="form-group">
                     <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
                     <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.last_name }}" readonly>
+
                   </div>
                   <div class="form-group">
                     <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
@@ -176,6 +181,7 @@
                   <div class="form-group">
                     <label for="is_staff-{{ user_l.id }}" class="col-form-label">Personal:</label>
                     <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.is_staff %}checked{% endif %} disabled>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
