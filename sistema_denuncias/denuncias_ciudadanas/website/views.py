@@ -27,7 +27,6 @@ def obteniendo(request):
             "causa": denuncia.get_causa_display(),
             "asunto": denuncia.asunto,
             "imagen": denuncia.imagen.url ,
-            #"fecha_suceso": denuncia.fecha_suceso.strftime("%Y-%m-%d"),# Formatea la fecha
             "latitude": denuncia.latitude,
             "longitude": denuncia.longitude,
             "estado": denuncia.estado,
@@ -88,42 +87,6 @@ def registro_denuncia(request):
             return redirect(reverse('registro_denuncia')+'?error')
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
-
-def administracion(request):
-    registro = Denuncia.objects.all()
-    usuarios = User.objects.all()
-    form = RegistroDeDenuncia()
-
-    if request.method == "POST":
-        if "ver" in request.POST:
-            print("ver")
-        elif "editar" in request.POST:
-            print("editar")
-            form = RegistroDeDenuncia(request.POST)
-            if form.is_valid():
-                denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
-                denuncia.titulo = form.cleaned_data["titulo"]
-                denuncia.asunto = form.cleaned_data["asunto"]
-                denuncia.causa = form.cleaned_data["causa"]
-                denuncia.estado = request.POST.get("Select")
-                denuncia.fecha_suceso = form.cleaned_data["fecha_suceso"]
-                denuncia.hora_suceso = form.cleaned_data["hora_suceso"]
-                denuncia.consentimiento = form.cleaned_data["consentimiento"]
-                denuncia.save()
-            else:
-                print("Errores del formulario:", form.errors)
-        elif "eliminar" in request.POST:
-            print("eliminar")
-            denuncia = get_object_or_404(Denuncia, id=request.POST.get("id"))
-            denuncia.delete()
-
-    context = {
-        'denuncias': registro,
-        'usuarios': usuarios,
-        'form': form,
-    }
-
-    return render(request, 'website/testing.html', context)
 
 def base_admin(request):
     return render(request, 'website/baseadmin.html')
@@ -297,9 +260,6 @@ def base_admin_usuario(request):
         "no_puede": no_puede,
     }
     return render(request, 'website/lista_user.html', context)
-
-
-
 
 
 def login_web(request):
