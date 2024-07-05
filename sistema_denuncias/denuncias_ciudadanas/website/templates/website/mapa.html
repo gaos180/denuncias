@@ -227,9 +227,12 @@
                 
                 <div class="card-body">
                     <ul class="list-group list-group-flush">
+                        {% if request.user.is_staff %}
                         <li class="list-group-item">
-                            <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_circle.png"> Estado: En revisión
+                            <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_circle.png"> Estado: invisible para usuario
                         </li>
+                        {% endif %}
+                        
                         <li class="list-group-item">
                             <img src="https://developers.google.com/static/maps/documentation/javascript/images/symbol_fore_open.png"> Estado: En procedimiento
                         </li>
@@ -365,7 +368,7 @@
         addMarkers(data);
     }
 
-    function addMarkers(data) {
+    function addMarkers(data, admin) {
         clearMarkers();
 
         for (const denuncia of data) {
@@ -386,15 +389,9 @@
 
             let markerPath;
             switch (denuncia.estado) {
-                {% if request.user.is_staff %}
                 case 0:
                     markerPath = google.maps.SymbolPath.CIRCLE;
                     break;
-                {% else %}
-                case 0:
-                    markerPath = google.maps.SymbolPath.CIRCLE;
-                    break;
-                {% endif %}
                 case 1:
                 google.maps.SymbolPath.CIRCLE
                     markerPath = google.maps.SymbolPath.FORWARD_OPEN_ARROW;
@@ -403,33 +400,59 @@
                     markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
                     break;
                 case 3:
-                    markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+                    markerPath = google.maps.SymbolPath.CIRCLE;
                     break;
                 case 4:
-                    markerPath = google.maps.SymbolPath.BACKWARD_CLOSED_ARROW;
+                    markerPath = google.maps.SymbolPath.CIRCLE;
                     break;
 
             }
-            const marker = new google.maps.Marker({
-                position: { lat: denuncia.latitude, lng: denuncia.longitude },
-                map: map,
-                title: denuncia.asunto,
-                icon: {
-                    path: markerPath,
-                    fillColor: markerColor,
-                    fillOpacity: 0.8,
-                    strokeColor: 'black',
-                    strokeWeight: 2,
-                    scale: 5
+            if(!admin){
+                if(denuncia.estado===1 || denuncia.estado===2){
+                    const marker = new google.maps.Marker({
+                        position: { lat: denuncia.latitude, lng: denuncia.longitude },
+                        map: map,
+                        title: denuncia.asunto,
+                        icon: {
+                            path: markerPath,
+                            fillColor: markerColor,
+                            fillOpacity: 0.8,
+                            strokeColor: 'black',
+                            strokeWeight: 2,
+                            scale: 5
+                        }
+                    });
+
+                    marker.addListener('click', function() {
+                        showMoreInfo(denuncia);
+                    });
+            
+                    markers.push(marker);
+                
                 }
-            });
-    
-            marker.addListener('click', function() {
-                showMoreInfo(denuncia);
-            });
-    
-            markers.push(marker);
+            }else{
+                const marker = new google.maps.Marker({
+                    position: { lat: denuncia.latitude, lng: denuncia.longitude },
+                    map: map,
+                    title: denuncia.asunto,
+                    icon: {
+                        path: markerPath,
+                        fillColor: markerColor,
+                        fillOpacity: 0.8,
+                        strokeColor: 'black',
+                        strokeWeight: 2,
+                        scale: 5
+                    }
+                });
+                    
+                marker.addListener('click', function() {
+                    showMoreInfo(denuncia);
+                });
+        
+                markers.push(marker);
+            }    
         }
+    
     }
     
 
@@ -444,11 +467,19 @@
         fetch('/api/denuncias/')
             .then(response => response.json())
             .then(data => {
+                let admin = false;
+                {% if request.user.is_staff %}
+                admin = true
+                {% else %}
+                admin = false
+                {% endif %}
+                console.log("Admin")
+                console.log(admin)
                 if (causa === 'all') {
-                    addMarkers(data);
+                    addMarkers(data, admin);
                 } else {
                     const filteredData = data.filter(denuncia => denuncia.causa === causa);
-                    addMarkers(filteredData);
+                    addMarkers(filteredData, admin);
                 }
             })
             .catch(error => console.error('Error:', error));
@@ -458,8 +489,14 @@
         fetch('/api/denuncias/')
             .then(response => response.json())
             .then(data => {
+                let admin = false;
+                {% if request.user.is_staff %}
+                admin = true
+                {% else %}
+                admin = false
+                {% endif %}
                 const filteredData = data.filter(denuncia => denuncia.estado === estado);
-                addMarkers(filteredData);
+                addMarkers(filteredData, admin);
             })
             .catch(error => console.error('Error:', error));
     }
@@ -494,7 +531,7 @@
         fetch('/api/denuncias/')
             .then(response => response.json())
             .then(data => {
-                initMap(data);
+                filterMapByCausa("all", admin=false);
             })
             .catch(error => console.error('Error:', error));
 
