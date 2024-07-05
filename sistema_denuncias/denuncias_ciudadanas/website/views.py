@@ -14,8 +14,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from .forms import RegistroDeUsuario
 from django.db.models import Q
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404
+
 
 def obteniendo(request):
     denuncias = Denuncia.objects.all()
@@ -54,15 +55,16 @@ def registar(request):
             user.set_password(form.cleaned_data['password1'])
             user.is_staff = False
             user.save()
-            group = Group.objects.get(name='denunciantes')
-            user.groups.add(group)
+
+            login(request, user)
+
             return render(request, "website/mapa.html")
         else:
             return render(request, 'website/register.html', {'form': form})  # Include error messages in context
     else:
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
-
+    
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
@@ -87,6 +89,9 @@ def registro_denuncia(request):
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
 
+def base_admin(request):
+    return render(request, 'website/baseadmin.html')
+
 categorias = [
         [0, "Lugar de explotación"],
         [1, "Uso y/o contaminación de recursos naturales"],
@@ -99,11 +104,9 @@ estados = [
         [3, "Rechazada"],
         [4, "Deshabilitada"]
     ]
-def base_admin(request):
-    return render(request, 'website/baseadmin.html')
 
 def base_admin_denuncia(request):
-    registro = Denuncia.objects.all()
+    registro = Denuncia.objects.all().order_by('id')
     usuarios = User.objects.all()
     form = RegistroDeDenuncia()
     causa = request.GET.get('causa')
@@ -113,8 +116,6 @@ def base_admin_denuncia(request):
     estado = request.GET.get('estado')
     query = request.GET.get('query')
 
-
-    # Apply filters before pagination
     if causa:
         registro = registro.filter(causa=causa)
     if fecha_suceso:
@@ -132,13 +133,14 @@ def base_admin_denuncia(request):
             Q(username_username_icontains=query)
         )
 
-    # Pagination after filtering
-    page_ = request.GET.get('page', 1)
-    paginator = Paginator(registro, 5)
+    paginator = Paginator(registro,2)
+    page = request.GET.get('page',1)
     try:
-        registro = paginator.page(page_)
-    except:
-        raise Http404
+        items_page = paginator.get_page(page)
+    except PageNotAnInteger:
+        items_page = paginator.get_page(1)
+    except EmptyPage:
+        items_page = paginator.get_page(paginator.num_pages)
 
     if request.method == "POST":
         if "ver" in request.POST:
@@ -165,6 +167,7 @@ def base_admin_denuncia(request):
             denuncia.delete()
 
     context = {
+        'items_page':items_page,
         'entity': registro,
         "paginator": paginator,
         'usuarios': usuarios,
@@ -229,12 +232,15 @@ def base_admin_usuario(request):
                 print("Errores del formulario de registro:", form_registro.errors)
 
 
-    page_2 = request.GET.get('page',1)
-    paginator = Paginator(usuarios, 4)
-    try:    
-        usuarios = paginator.page(page_2)
-    except: 
-        raise Http404
+    paginator = Paginator(usuarios,2)
+    page = request.GET.get('page',1)
+    try:
+        items_page = paginator.get_page(page)
+    except PageNotAnInteger:
+        items_page = paginator.get_page(1)
+    except EmptyPage:
+        items_page = paginator.get_page(paginator.num_pages)
+
     user_json = []
     for user_d in usuarios:
         user_data = {
@@ -250,6 +256,7 @@ def base_admin_usuario(request):
         user_json.append(user_data)
 
     context = {
+        "items_page":items_page,
         "usuarios": usuarios,
         "paginator":paginator,
         "entity": user_json,
@@ -271,7 +278,7 @@ def login_web(request):
             if user is not None:
                 login(request, user)
                 if request.user.is_staff:
-                    return redirect(reverse('panel_admin'))
+                    return redirect(reverse('panel_admin_denuncia'))
                 else:
                     return redirect(reverse('mapa'))
     else:

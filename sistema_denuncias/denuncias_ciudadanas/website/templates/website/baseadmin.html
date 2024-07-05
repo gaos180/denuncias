@@ -271,6 +271,7 @@
         <i class='bx bx-menu' id="btn" ></i>
     </div>
     <ul class="nav-list">
+      
       <li>
         <a href="{% url 'panel_admin_denuncia' %}">
           <i class='bx bx-grid-alt'></i>
@@ -285,6 +286,13 @@
        </a>
        <span class="tooltip">Usuarios</span>
      </li>
+     <li>
+      <a href="{% url 'mapa' %}">
+        <i class='bx bx-map' ></i>
+        <span class="links_name">Mapa</span>
+      </a>
+      <span class="tooltip">Mapa</span>
+    </li>
      <li class="profile">
       <a href="#">
           <form method="post" action="{% url 'logout' %}" class="">

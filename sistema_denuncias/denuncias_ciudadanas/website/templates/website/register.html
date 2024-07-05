@@ -1,116 +1,29 @@
-{% extends "./mapa.html" %}
-{% load bootstrap5 %}
-{% bootstrap_css %}
-
+{% extends './mapa.html' %}
 {% block content %}
-<div class="container mt-5">
-    <div class="card mx-auto" style="max-width: 25rem;">
-        <div class="card-header text-center bg-dark">
-            <h2 class="text-white"><strong>Registrar Usuario</strong></h2>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_username" class="form-label text-dark"><strong>Nombre de usuario</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">@</span>
-                        {{ form.username }}
+    {% load crispy_forms_tags %}
+    <div class="container-fluid" style="background-color: #f0f8ff; min-height: 100vh;">
+        <br><br>
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                <div class="card">
+                        <div class="card-header bg-black text-white text-center rounded-lg">
+                            <h1>Registro de usuario</h1>
+                        </div>
+                        <div class="card-body">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                {{ form | crispy }}
+                                <button type="submit" class="btn btn-primary">Registrarse</button>
+                                <div class="mt-2">
+                                    <a href="{% url 'mapa' %}">Ir a inicio</a> |
+                                    <a href="{% url 'login' %}">Iniciar sesión</a>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-
-                <div class="mb-3">
-                    <label for="id_first_name" class="form-label text-dark"><strong>Nombre</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                            </svg>
-                        </span>
-                        {{ form.first_name }}
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="id_last_name" class="form-label text-dark"><strong>Apellido</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-person" viewBox="0 0 16 16">
-                                <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                        </span>
-                        {{ form.last_name }}
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="id_email" class="form-label text-dark"><strong>Correo electrónico</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                                <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z"/>
-                            </svg>
-                        </span>
-                        {{ form.email }}
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="id_password1" class="form-label text-dark"><strong>Contraseña</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-                                <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5"/>
-                                <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                            </svg>
-                        </span>
-                        {{ form.password1 }}
-                    </div>
-                </div>
-
-                <div class="mb-3">
-                    <label for="id_password2" class="form-label text-dark"><strong>Confirme la contraseña</strong></label>
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" fill="currentColor" class="bi bi-key" viewBox="0 0 16 16">
-                                <path d="M0 8a4 4 0 0 1 7.465-2H14a.5.5 0 0 1 .354.146l1.5 1.5a.5.5 0 0 1 0 .708l-1.5 1.5a.5.5 0 0 1-.708 0L13 9.207l-.646.647a.5.5 0 0 1-.708 0L11 9.207l-.646.647a.5.5 0 0 1-.708 0L9 9.207l-.646.647A.5.5 0 0 1 8 10h-.535A4 4 0 0 1 0 8m4-3a3 3 0 1 0 2.712 4.285A.5.5 0 0 1 7.163 9h.63l.853-.854a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.646-.647a.5.5 0 0 1 .708 0l.646.647.793-.793-1-1h-6.63a.5.5 0 0 1-.451-.285A3 3 0 0 0 4 5"/>
-                                <path d="M4 8a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
-                            </svg>
-                        </span>
-                        {{ form.password2 }}
-                    </div>
-                </div>
-
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary w-100"><strong>Registrar</strong></button>
-                </div>
-            </form>
-        </div>
-
-        {% if form.errors %}
-        <div class="card-footer">
-            <div class="alert alert-danger" role="alert">
-                {% for field in form %}
-                    {% for error in field.errors %}
-                        <p><strong>{{ field.label }}:</strong> {{ error }}</p>
-                    {% endfor %}
-                {% endfor %}
-                {% for error in form.non_field_errors %}
-                    <p>{{ error }}</p>
-                {% endfor %}
             </div>
         </div>
-        {% endif %}
+        <br><br>
     </div>
-
-
-{% bootstrap_javascript %}
-<style>
-    .uniform-field .form-control {
-        height: calc(2.25rem + 2px); /* consistent height */
-        width: 100%; /* full width */
-    }
-    .uniform-field .input-group-text {
-        height: calc(2.25rem + 2px); /* consistent height */
-    }
-</style>
-{% endblock content %}
+{% endblock %}
