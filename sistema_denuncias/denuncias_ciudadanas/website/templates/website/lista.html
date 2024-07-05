@@ -88,7 +88,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for denuncia in entity %}
+      {% for denuncia in items_page %}
         <tr class="overflow-wrap">
           <td>{{denuncia.titulo}}</td>
           <td>{{denuncia.username}}</td>
@@ -102,7 +102,7 @@
                 <button type="button" class="btn text-white btn-success" data-bs-toggle="modal" data-bs-target="#modal-ver{{ denuncia.id }}" name="ver">
                   <i class='bx bxs-show' ></i>
                 </button>
-                  <button type="button" class="btn btn-primary button-edit" data-bs-toggle="modal" data-bs-target="#modal-edit{{ denuncia.id }}" name="editar">
+                  <button type="button" class="btn btn-warning button-edit" data-bs-toggle="modal" data-bs-target="#modal-edit{{ denuncia.id }}" name="editar">
                     <i class='bx bx-edit-alt' ></i>
                 </button>
                 <button type="button" class="btn text-white btn-danger"  data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ denuncia.id }}">

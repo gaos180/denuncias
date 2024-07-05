@@ -80,7 +80,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for user_l in entity %}
+      {% for user_l in items_page %}
         <tr class="overflow-wrap">
           <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
           <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
@@ -99,7 +99,7 @@
                 <button type="button" class="btn text-white btn-success"  data-bs-toggle="modal" data-bs-target="#modal-ver{{ user_l.id }}" name="ver">
                   <i class='bx bxs-show'></i>
                 </button>
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modal-edit{{ user_l.id }}" name="editar">
                   <i class='bx bx-edit-alt'></i>
                 </button>
                 <button type="button" class="btn text-white btn-danger" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ user_l.id }}">
