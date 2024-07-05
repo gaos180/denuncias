@@ -277,7 +277,7 @@ def login_web(request):
             if user is not None:
                 login(request, user)
                 if request.user.is_staff:
-                    return redirect(reverse('panel_admin'))
+                    return redirect(reverse('panel_admin_denuncia'))
                 else:
                     return redirect(reverse('mapa'))
     else:
