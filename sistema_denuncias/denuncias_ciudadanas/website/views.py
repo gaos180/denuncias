@@ -17,6 +17,7 @@ from django.db.models import Q
 from django.core.paginator import Paginator
 from django.http import Http404
 
+
 def obteniendo(request):
     denuncias = Denuncia.objects.all()
     denuncias_json = []
@@ -62,7 +63,7 @@ def registar(request):
     else:
         form = UserRegisterForm()
         return render(request, 'website/register.html', {'form': form})
-
+    
 
 def registro_denuncia(request):
     registro_denuncia = RegistroDeDenuncia()
@@ -87,6 +88,9 @@ def registro_denuncia(request):
     return render(request, 'website/registro_denuncia.html', {'registro_denuncia':registro_denuncia})
 
 
+def base_admin(request):
+    return render(request, 'website/baseadmin.html')
+
 categorias = [
         [0, "Lugar de explotación"],
         [1, "Uso y/o contaminación de recursos naturales"],
@@ -99,8 +103,6 @@ estados = [
         [3, "Rechazada"],
         [4, "Deshabilitada"]
     ]
-def base_admin(request):
-    return render(request, 'website/baseadmin.html')
 
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all()
