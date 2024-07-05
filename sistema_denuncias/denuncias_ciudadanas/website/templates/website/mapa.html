@@ -28,82 +28,72 @@
 </head>
 <body>
     <style>
-        a.text-white{
-            border-radius: 8px;
-            border-bottom: 6px solid #5ab228;
-        }
+        
         li{
             margin-left: 5px;
             margin-right: 5px;
         }
+
     
     </style>
-<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'mapa' %}">
-      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
-        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
-      </svg>
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-list" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
-        </svg>
-      </button>
-    <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      {% if request.user.is_authenticated %}
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link text-light">Hola, {{ user.first_name }} {{ user.last_name }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-light fw-bold btn btn-light" href="{% url 'registro_denuncia' %}" style="background-color: transparent; border-radius: 8px; text-decoration: none;">Denunciar ahora</a>
-        </li>
-        <li class="nav-item">
-          <form method="post" action="{% url 'logout' %}" class="">
-            {% csrf_token %}
-            <button type="submit" class="btn btn-light " style="border-radius: 8px; color: #212529; font-weight: 1000;">Cerrar sesión</button>
-          </form>
-        </li>
-      </ul>
-          {% if request.user.is_staff %}
-              <a class="nav-link text-light">Cuenta administrador</a>
-              <a href="{% url 'panel_admin' %}" class="nav-link text-light btn-primary", style="background-color: green;"> Administración</a>
-          {% endif %}
-          
-      {% else %}
-      <ul class="navbar-nav me-auto">
-        <li class="nav-item">
-          <a class="nav-link fw-bold btn btn-light" href="{% url 'login' %}" style="border-radius: 8px; color: #212529; padding: 10px 20px; font-weight: 1000;">Iniciar sesión</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link fw-bold border btn text-light" href="{% url 'register' %}" style="border-radius: 8px; padding: 10px 20px;">Crear usuario</a>
-        </li>
-      </ul>
-      {% endif %}
-    </div>
-  </div>
-</nav>
-
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'mapa' %}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="green" class="bi bi-tree-fill" viewBox="0 0 16 16">
+              <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777z"/>
+            </svg>
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="white" class="bi bi-list" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5"/>
+            </svg>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav ms-auto d-flex align-items-center">
+              {% if request.user.is_authenticated %}
+                <li class="nav-item">
+                  <a class="nav-link text-light">Hola, {{ user.first_name }} {{ user.last_name }}</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link text-light fw-bold btn btn-light rounded" href="{% url 'registro_denuncia' %}" style="background-color: transparent; border-radius: 8px;">Denunciar ahora</a>
+                </li>
+                <li class="nav-item">
+                  <form method="post" action="{% url 'logout' %}" class="d-inline-block">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-light" style="color: #212529;">Cerrar sesión</button>
+                  </form>
+                </li>
+                {% if request.user.is_staff %}
+                  <li class="nav-item">
+                    <a href="{% url 'panel_admin' %}" class="nav-link text-light btn-primary text-center" style="background-color: green; border-radius: 8px;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="white" class="bi bi-person-badge-fill" viewBox="0 0 16 16">
+                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6m5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1z"/>
+                      </svg>
+                      Administración
+                    </a>
+                  </li>
+                {% endif %}
+              {% else %}
+                <li class="nav-item">
+                  <a class="nav-link fw-bold btn btn-light" href="{% url 'login' %}" style="border-radius: 8px; color: #212529; padding: 10px 20px;">Iniciar sesión</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link fw-bold border btn text-light" href="{% url 'register' %}" style="border-radius: 8px; padding: 10px 20px;">Crear usuario</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      
     {% block content %}
     <div class="container-fluid">
         
 
-<!--
-<div class="btn-group px-4">
-                  <button type="button" class="btn btn-primary button-edit btn btn-success" data-bs-toggle="modal" data-bs-target="#modal-edit{{ denuncia.id }}" name="editar">
-                    <i class='bx bx-edit-alt' ></i>
-                </button>
-                <button type="button" class="btn text-white" style="background-color:black;" data-bs-toggle="modal" data-bs-target="#modal-ver{{ denuncia.id }}" name="ver">
-                  <i class='bx bxs-show' ></i>
-                </button>
-                <button type="button" class="btn text-white" style="background-color:purple;" data-bs-toggle="modal" data-bs-target="#modal-eliminar{{ denuncia.id }}">
-                  <i class='bx bx-trash' ></i>
-                </button>
-
--->
 
         <div class="row">
+
+                <!--Div de btn group-->
                 <div class="btn-group-vertical" style="z-index: 2; position: absolute; bottom: 10%; max-width: 100px;">
                     <!-- Botón para abrir el modal de la leyenda -->
                     <button type="button" class="btn text-light bg-dark" data-bs-toggle="modal" data-bs-target="#leyendaModal">
@@ -273,33 +263,63 @@
 <!-- Modal para Botones de Filtro -->
 <div class="modal fade" id="filtroModal" tabindex="-1" aria-labelledby="filtroModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="filtroModalLabel">Filtros</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filtroModalLabel">Filtros</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <select class="form-select" id="filterSelect" onchange="handleFilterChange()">
+                    <option value="all">Mostrar Todos</option>
+                    <option value="Lugar de explotación">Lugar de explotación</option>
+                    <option value="Uso y/o contaminación de recursos naturales">Uso y/o contaminación de recursos naturales</option>
+                    <option value="Residuos, emisiones e inmisiones">Residuos, emisiones e inmisiones</option>
+                    {% if request.user.is_staff %}
+                    <option value="estado_0">En revisión</option>
+                    <option value="estado_3">Rechazada</option>
+                    <option value="estado_4">Deshabilitada</option>
+                    {% endif %}
+                    <option value="estado_1">En procedimiento</option>
+                    <option value="estado_2">Finalizada</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <button type="button" onclick="filterMapByCausa('all')"  class="btn btn-outline-info bg-dark">Mostrar Todos</button>
-          <button type="button" onclick="filterMapByCausa('Lugar de explotación')" class="btn btn-outline-info bg-dark">Lugar de explotación</button>
-          <button type="button" onclick="filterMapByCausa('Uso y/o contaminación de recursos naturales')" class="btn btn-outline-info bg-dark">Uso y/o contaminación de recursos naturales</button>
-          <button type="button" onclick="filterMapByCausa('Residuos, emisiones e inmisiones')" class="btn btn-outline-info bg-dark">Residuos, emisiones e inmisiones</button>
-          {% if request.user.is_staff %}
-          <button type="button" onclick="filterMapByEstado(0)" class="btn btn-outline-info bg-dark">En revisión</button>
-          <button type="button" onclick="filterMapByEstado(3)" class="btn btn-outline-info bg-dark">Rechazada</button>
-          <button type="button" onclick="filterMapByEstado(4)" class="btn btn-outline-info bg-dark">Deshabilitada</button>
-          {% endif %}
-          <button type="button" onclick="filterMapByEstado(1)" class="btn btn-outline-info bg-dark">En procedimiento</button>
-          <button type="button" onclick="filterMapByEstado(2)" class="btn btn-outline-info bg-dark">Finalizada</button>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        </div>
-      </div>
     </div>
-  </div>
+</div>
 
+<!--Script para que sea filtro en select-->
+<script>
+    function handleFilterChange() {
+        var select = document.getElementById('filterSelect');
+        var value = select.value;
 
-  <script>
+        if (value === 'all') {
+            filterMapByCausa('all');
+        } else if (value === 'Lugar de explotación') {
+            filterMapByCausa('Lugar de explotación');
+        } else if (value === 'Uso y/o contaminación de recursos naturales') {
+            filterMapByCausa('Uso y/o contaminación de recursos naturales');
+        } else if (value === 'Residuos, emisiones e inmisiones') {
+            filterMapByCausa('Residuos, emisiones e inmisiones');
+        } else if (value === 'estado_0') {
+            filterMapByEstado(0);
+        } else if (value === 'estado_3') {
+            filterMapByEstado(3);
+        } else if (value === 'estado_4') {
+            filterMapByEstado(4);
+        } else if (value === 'estado_1') {
+            filterMapByEstado(1);
+        } else if (value === 'estado_2') {
+            filterMapByEstado(2);
+        }
+    }
+</script>
+
+<!--Script principal del mapa-->
+<script>
     let map;
     let markers = [];
 
