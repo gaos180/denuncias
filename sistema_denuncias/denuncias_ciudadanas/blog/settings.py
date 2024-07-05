@@ -17,12 +17,12 @@ SECRET_KEY = "django-insecure-@uysg*n*d@@z7(1cd7d6)dfa=xe+0v4g_l0l^=-fb8-48e_pxd
 # SECURITY WARNING: don't run with debug turned on in production!
 
 # Si quieres que se vea el porque de los errores debe ser true, sino false
-#DEBUG = False
+DEBUG = False
 
-#ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"]
 
-DEBUG = True
-ALLOWED_HOSTS = []
+#DEBUG = True
+#ALLOWED_HOSTS = []
 
 LOGOUT_REDIRECT_URL = '/mapa/'
 # Application definition

@@ -55,8 +55,9 @@ def registar(request):
             user.set_password(form.cleaned_data['password1'])
             user.is_staff = False
             user.save()
-            group = Group.objects.get(name='denunciantes')
-            user.groups.add(group)
+
+            login(request, user)
+
             return render(request, "website/mapa.html")
         else:
             return render(request, 'website/register.html', {'form': form})  # Include error messages in context

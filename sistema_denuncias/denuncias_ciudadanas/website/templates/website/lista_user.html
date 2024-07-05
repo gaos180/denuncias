@@ -18,7 +18,9 @@
   <hr class="w-100" style="border: 3px solid black; border-radius: 5px;">
   
   <div class="text-end pb-1">
-    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#agregarDenuncia">
+
+    <button type="button" class="btn btn-outline-success" style="font-size: 1.3rem;" data-bs-toggle="modal" data-bs-target="#agregarDenuncia">
+
       <i class='bx bx-add-to-queue'>
         <span> Agregar Usuario </span>
       </i>
@@ -49,9 +51,10 @@
 <hr class="w-100" style="border: 3px solid black; border-radius: 5px;">
 <form action="" method="GET" class="filter-form d-flex align-items-center flex-wrap gap-2">
   <div class="form-group">
-    <label for="is_staff">Staff</label>
+    <label for="is_staff">Persona</label>
     <select class="form-control" id="is_staff" name="is_staff">
-      <option value="">-- Staff --</option>
+      <option value="">-- Personal --</option>
+
       <option value="true" {% if request.GET.is_staff == "true" %}selected{% endif %}>Sí</option>
       <option value="false" {% if request.GET.is_staff == "false" %}selected{% endif %}>No</option>
     </select>
@@ -69,11 +72,11 @@
   <table class="mt-5 table table-hover">
     <thead>
       <tr>
-        <th>Username</th>
+        <th>Usuario</th>
         <th>Nombre</th>
         <th>Apellido</th>
-        <th>Email</th>
-        <th>Staff</th>
+        <th>Correo electrónico</th>
+        <th>Personal</th>
         <th>Ultima Sesion</th>
         <th>Fecha Registro</th>
         <th class="text-center">Acciones</th>
@@ -83,10 +86,10 @@
       {% for user_l in items_page %}
         <tr class="overflow-wrap">
           <td style="font-size: 1.2rem;">{{user_l.username|default:"-"}}</td>
-          <td style="font-size: 1.2rem;">{{user_l.nombre|default:"-"}}</td>
-          <td style="font-size: 1.2rem;">{{user_l.apellido|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.first_name|default:"-"}}</td>
+          <td style="font-size: 1.2rem;">{{user_l.last_name|default:"-"}}</td>
           <td style="font-size: 1.2rem;">{{user_l.email|default:"-"}}</td>
-          {% if user_l.activo %}
+          {% if user_l.is_staff %}
               <td style="font-size: 2rem;color:green;"><i class='bx bxs-check-circle'></i></td>
           {% else %}
               <td style="font-size: 2rem;color:red;"><i class='bx bxs-x-circle'></i></td>
@@ -125,19 +128,20 @@
                   <input type="hidden" name="id" value="{{ user_l.id }}">
                   <div class="form-group">
                     <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
-                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}">
+                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.first_name }}">
                   </div>
                   <div class="form-group">
                     <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
-                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}">
+                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.last_name }}">
                   </div>
                   <div class="form-group">
-                    <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
+                    <label for="email-{{ user_l.id }}" class="col-form-label">Correo electrónico:</label>
                     <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}">
                   </div>
                   <div class="form-group">
-                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
-                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %}>
+                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Personal:</label>
+                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.is_staff %}checked{% endif %}>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -163,19 +167,21 @@
                   <input type="hidden" name="id" value="{{ user_l.id }}">
                   <div class="form-group">
                     <label for="first_name-{{ user_l.id }}" class="col-form-label">Nombre:</label>
-                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.nombre }}" readonly>
+                    <input type="text" class="form-control" id="first_name-{{ user_l.id }}" name="first_name" value="{{ user_l.first_name }}" readonly>
                   </div>
                   <div class="form-group">
                     <label for="last_name-{{ user_l.id }}" class="col-form-label">Apellido:</label>
-                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.apellido }}" readonly>
+                    <input type="text" class="form-control" id="last_name-{{ user_l.id }}" name="last_name" value="{{ user_l.last_name }}" readonly>
+
                   </div>
                   <div class="form-group">
                     <label for="email-{{ user_l.id }}" class="col-form-label">Email:</label>
                     <input type="email" class="form-control" id="email-{{ user_l.id }}" name="email" value="{{ user_l.email }}" readonly>
                   </div>
                   <div class="form-group">
-                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Staff:</label>
-                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.activo %}checked{% endif %} disabled>
+                    <label for="is_staff-{{ user_l.id }}" class="col-form-label">Personal:</label>
+                    <input type="checkbox" id="is_staff-{{ user_l.id }}" name="is_staff" {% if user_l.is_staff %}checked{% endif %} disabled>
+
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
