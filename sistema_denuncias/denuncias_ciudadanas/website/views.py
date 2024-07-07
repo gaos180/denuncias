@@ -105,6 +105,8 @@ estados = [
         [4, "Deshabilitada"]
     ]
 
+from django.db.models import Q
+
 def base_admin_denuncia(request):
     registro = Denuncia.objects.all().order_by('id')
     usuarios = User.objects.all()
@@ -130,11 +132,11 @@ def base_admin_denuncia(request):
         registro = registro.filter(
             Q(titulo__icontains=query) |
             Q(asunto__icontains=query) |
-            Q(username_username_icontains=query)
+            Q(username__username__icontains=query)
         )
 
-    paginator = Paginator(registro,2)
-    page = request.GET.get('page',1)
+    paginator = Paginator(registro, 2)
+    page = request.GET.get('page', 1)
     try:
         items_page = paginator.get_page(page)
     except PageNotAnInteger:
@@ -167,7 +169,7 @@ def base_admin_denuncia(request):
             denuncia.delete()
 
     context = {
-        'items_page':items_page,
+        'items_page': items_page,
         'entity': registro,
         "paginator": paginator,
         'usuarios': usuarios,
@@ -176,6 +178,7 @@ def base_admin_denuncia(request):
         'categorias': categorias,
     }
     return render(request, 'website/lista.html', context)
+
 
 def base_admin_usuario(request):
     form = RegistroDeUsuario()

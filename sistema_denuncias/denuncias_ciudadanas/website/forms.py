@@ -18,7 +18,6 @@ class UserRegisterForm(UserCreationForm):
     def clean_username(self):
         username = self.cleaned_data['username']
 
-        # Check for existing usernames (consider case-insensitive check if needed)
         if User.objects.filter(username__iexact=username).exists():
             raise ValidationError("El nombre de usuario ya existe. Por favor, elija otro nombre.")
         return username
